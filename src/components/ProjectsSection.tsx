@@ -156,6 +156,8 @@ const ProjectCard = ({ project, index }: { project: any, index: number }) => {
               <img
                 src={project.image}
                 alt={project.title}
+                width={640}
+                height={360}
                 loading="lazy"
                 decoding="async"
                 className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 ${isHovered && project.video ? 'md:opacity-0' : 'opacity-100'}`}

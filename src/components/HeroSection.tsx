@@ -79,6 +79,8 @@ const HeroSection = () => {
             <img
               src={heroImage}
               alt="Perfil"
+              width={384}
+              height={384}
               fetchPriority="high"
               decoding="async"
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"

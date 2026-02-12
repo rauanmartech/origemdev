@@ -121,6 +121,9 @@ const Polaroid = ({ item, containerRef, index }: { item: any; containerRef: any;
                 <img
                     src={item.image}
                     alt={item.name}
+                    width={400}
+                    height={400}
+                    loading="lazy"
                     className="w-full h-auto select-none block"
                     draggable={false}
                 />

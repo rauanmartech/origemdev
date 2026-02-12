@@ -20,25 +20,41 @@ const Navbar = () => {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
-
-      // Scroll spy logic
-      if (location.pathname === "/") {
-        const sections = ["projetos", "feedbacks", "sobre", "contato"];
-        const current = sections.find((section) => {
-          const el = document.getElementById(section);
-          if (el) {
-            const rect = el.getBoundingClientRect();
-            // Check if section is in the upper part of viewport
-            return rect.top <= 200 && rect.bottom >= 200;
-          }
-          return false;
-        });
-        setActiveSection(current || "");
-      }
     };
 
-    window.addEventListener("scroll", onScroll);
-    onScroll(); // initial check
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // IntersectionObserver for scroll spy
+    if (location.pathname === "/") {
+      const observerOptions = {
+        root: null,
+        rootMargin: "-20% 0px -70% 0px", // Focus on the middle-upper part of viewport
+        threshold: 0,
+      };
+
+      const observerCallback = (entries: IntersectionObserverEntry[]) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      };
+
+      const observer = new IntersectionObserver(observerCallback, observerOptions);
+      const sections = ["projetos", "feedbacks", "sobre", "contato"];
+
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      return () => {
+        window.removeEventListener("scroll", onScroll);
+        observer.disconnect();
+      };
+    }
+
     return () => window.removeEventListener("scroll", onScroll);
   }, [location.pathname]);
 

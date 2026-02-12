@@ -30,6 +30,9 @@ const AboutSection = () => {
               <img
                 src={sobreImg}
                 alt="Sobre mim"
+                width={800}
+                height={600}
+                loading="lazy"
                 className="w-full h-full object-cover rounded-3xl relative z-10"
               />
 

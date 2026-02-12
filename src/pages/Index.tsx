@@ -1,11 +1,21 @@
 import { motion, useScroll, useTransform } from "framer-motion";
+import { lazy, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import FeedbacksSection from "@/components/FeedbacksSection";
-import AboutSection from "@/components/AboutSection";
-import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
+
+// Lazy load non-critical sections
+const ProjectsSection = lazy(() => import("@/components/ProjectsSection"));
+const FeedbacksSection = lazy(() => import("@/components/FeedbacksSection"));
+const AboutSection = lazy(() => import("@/components/AboutSection"));
+const ContactSection = lazy(() => import("@/components/ContactSection"));
+const Footer = lazy(() => import("@/components/Footer"));
+
+const SectionSkeleton = () => (
+  <div className="py-24 px-4 max-w-6xl mx-auto space-y-8">
+    <div className="h-12 w-1/3 bg-muted animate-pulse rounded-xl mx-auto" />
+    <div className="h-96 w-full bg-muted animate-pulse rounded-[3rem]" />
+  </div>
+);
 
 const Index = () => {
   const { scrollYProgress } = useScroll();
@@ -48,11 +58,13 @@ const Index = () => {
       <div className="relative z-10">
         <Navbar />
         <HeroSection />
-        <ProjectsSection />
-        <FeedbacksSection />
-        <AboutSection />
-        <ContactSection />
-        <Footer />
+        <Suspense fallback={<SectionSkeleton />}>
+          <ProjectsSection />
+          <FeedbacksSection />
+          <AboutSection />
+          <ContactSection />
+          <Footer />
+        </Suspense>
       </div>
     </div>
   );
