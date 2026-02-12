@@ -33,14 +33,10 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react')) return 'vendor-react';
-            if (id.includes('framer-motion')) return 'vendor-motion';
-            if (id.includes('lucide-react')) return 'vendor-icons';
-            if (id.includes('@radix-ui')) return 'vendor-radix';
-            return 'vendor';
-          }
+        manualChunks: {
+          'vendor': ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query'],
+          'framer-motion': ['framer-motion'],
+          'lucide': ['lucide-react'],
         },
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
