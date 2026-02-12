@@ -110,8 +110,7 @@ const Polaroid = ({ item, containerRef, index }: { item: any; containerRef: any;
             style={{
                 top: item.y,
                 left: item.x,
-                // On mobile, we might want to center them more or let them stack naturally?
-                // Let's rely on the relative percentages.
+                backfaceVisibility: 'hidden',
                 boxShadow: "5px 5px 15px rgba(0,0,0,0.15)"
             }}
         >
@@ -128,7 +127,7 @@ const Polaroid = ({ item, containerRef, index }: { item: any; containerRef: any;
                     draggable={false}
                 />
             </div>
-            <p className="font-handwriting font-medium text-center text-gray-800 text-lg md:text-xl select-none">
+            <p className="font-handwriting font-medium text-center text-gray-800 text-lg md:text-xl select-none pointer-events-none">
                 {item.name}
             </p>
         </motion.div>

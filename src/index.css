@@ -94,7 +94,6 @@
 
   section {
     scroll-margin-top: 5rem;
-    content-visibility: auto;
   }
 
   h1,
@@ -104,11 +103,6 @@
   h5,
   h6 {
     font-family: 'Space Grotesk', sans-serif;
-  }
-
-  img,
-  video {
-    content-visibility: auto;
   }
 }
 
