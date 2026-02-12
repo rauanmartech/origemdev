@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
 import { ExternalLink, Code2, ChevronDown, ChevronLeft, ChevronRight, Palette, Globe, ShoppingCart, BarChart3, Smartphone, ImageIcon, Scissors, Heart, Building2, Dumbbell, Stethoscope, Brush } from "lucide-react";
@@ -120,13 +120,20 @@ const ProjectCard = ({ project, index }: { project: any, index: number }) => {
     }
   }, [isHovered]);
 
+  const CardWrapper = project.link ? 'a' : 'div';
+  const wrapperProps = project.link ? {
+    href: project.link,
+    target: "_blank",
+    rel: "noopener noreferrer",
+    className: "block h-full"
+  } : {
+    className: "block h-full"
+  };
+
   return (
     <motion.div variants={item}>
-      <a
-        href={project.link || "#"}
-        target={project.link ? "_blank" : "_self"}
-        rel="noopener noreferrer"
-        className="block h-full"
+      <CardWrapper
+        {...wrapperProps}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -151,10 +158,10 @@ const ProjectCard = ({ project, index }: { project: any, index: number }) => {
                 alt={project.title}
                 loading="lazy"
                 decoding="async"
-                className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 ${isHovered && project.video ? 'opacity-0' : 'opacity-100'}`}
+                className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 ${isHovered && project.video ? 'md:opacity-0' : 'opacity-100'}`}
               />
             ) : (
-              <div className={`relative z-10 flex flex-col items-center gap-2 transition-opacity duration-500 ${isHovered && project.video ? 'opacity-0' : 'opacity-100'}`}>
+              <div className={`relative z-10 flex flex-col items-center gap-2 transition-opacity duration-500 ${isHovered && project.video ? 'md:opacity-0' : 'opacity-100'}`}>
                 <ImageIcon className="w-8 h-8 text-muted-foreground" />
                 <span className="text-muted-foreground text-xs font-medium">Screenshot do projeto</span>
               </div>
@@ -204,7 +211,7 @@ const ProjectCard = ({ project, index }: { project: any, index: number }) => {
             )}
           </div>
         </div>
-      </a>
+      </CardWrapper>
     </motion.div>
   );
 };
@@ -213,10 +220,47 @@ const ProjectsSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(scrollContainerRef, { once: true, margin: "-100px" });
 
   const ITEMS_PER_PAGE = 6;
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   const currentProjects = projects.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  // Peek animation on mobile when in view
+  useEffect(() => {
+    if (isInView && window.innerWidth < 768) {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const animateScroll = async () => {
+        // Temporarily disable snap to allow smooth peek
+        container.style.scrollSnapType = 'none';
+
+        // Delay to let entrance animation finish
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const cardWidth = container.children[0]?.clientWidth || 0;
+        const peekAmount = cardWidth * 0.35; // Show ~35% of next card
+
+        // Scroll right (peek)
+        container.scrollTo({ left: peekAmount, behavior: 'smooth' });
+
+        // Hold briefly
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // Scroll back (return)
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+
+        // Restore snap after animation
+        // Wait for return scroll to finish roughly
+        setTimeout(() => {
+          container.style.scrollSnapType = 'x mandatory';
+        }, 500);
+      };
+
+      animateScroll();
+    }
+  }, [isInView]);
 
   // Reset mobile carousel scroll when page changes
   useEffect(() => {
@@ -272,30 +316,47 @@ const ProjectsSection = () => {
           </p>
         </motion.div>
 
+        {/* Mobile View - Continuous Carousel */}
+        <div className="relative md:hidden">
+          <motion.div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="
+                flex overflow-x-auto snap-x snap-mandatory items-stretch
+                gap-8 pt-12 pb-6 -mx-4 px-8
+                [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']
+              "
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
+            {projects.map((project, index) => (
+              <div key={index} className="min-w-[85vw] snap-center flex flex-col h-full">
+                <ProjectCard project={project} index={index} />
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Mobile Swipe Instruction - Removed */}
+        </div>
+
+        {/* Desktop View - Paginated Grid */}
         <motion.div
-          ref={scrollContainerRef}
-          onScroll={handleScroll}
-          className="
-            flex overflow-x-auto snap-x snap-mandatory items-stretch
-            gap-8 py-4 -mx-4 px-8 pb-8
-            md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:py-0 md:mx-auto md:px-0 md:pb-0 md:overflow-visible
-            [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']
-          "
+          className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          key={currentPage} // Re-animate when page changes
+          key={currentPage}
         >
           {currentProjects.map((project, index) => (
-            <div key={index} className="min-w-[85vw] md:min-w-0 snap-center flex flex-col h-full">
-              <ProjectCard project={project} index={index} />
-            </div>
+            <ProjectCard key={index} project={project} index={index} />
           ))}
         </motion.div>
 
         {/* Mobile Navigation & Dots (Carousel Controls) */}
-        <div className="flex items-center justify-center gap-6 md:hidden mt-8">
+        <div className="flex items-center justify-center gap-6 md:hidden mt-4">
           <button
             onClick={() => scrollTo(Math.max(0, activeIndex - 1))}
             disabled={activeIndex === 0}
@@ -310,25 +371,55 @@ const ProjectsSection = () => {
           </button>
 
           <div className="flex justify-center gap-2">
-            {currentProjects.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => scrollTo(index)}
-                className={`
-                            h-2 rounded-full transition-all duration-300
-                            ${index === activeIndex ? 'w-8 bg-primary' : 'w-2 bg-primary/20 hover:bg-primary/40'}
-                        `}
-                aria-label={`Ir para projeto ${index + 1}`}
-              />
-            ))}
+            {(() => {
+              const maxDots = 5;
+              const total = projects.length;
+              let start = 0;
+
+              if (total > maxDots) {
+                start = Math.max(0, Math.min(activeIndex - 2, total - maxDots));
+              }
+
+              const visibleDots = total <= maxDots
+                ? Array.from({ length: total }, (_, i) => i)
+                : Array.from({ length: maxDots }, (_, i) => start + i);
+
+              return visibleDots.map((index) => {
+                const isActive = index === activeIndex;
+                return (
+                  <div key={index} className="relative flex flex-col items-center">
+                    <AnimatePresence>
+                      {isActive && (
+                        <motion.span
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: -8 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          className="absolute -top-4 text-[10px] font-bold text-primary"
+                        >
+                          {index + 1}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                    <button
+                      onClick={() => scrollTo(index)}
+                      className={`
+                                  h-2 rounded-full transition-all duration-300
+                                  ${isActive ? 'w-8 bg-primary' : 'w-2 bg-primary/20 hover:bg-primary/40'}
+                              `}
+                      aria-label={`Ir para projeto ${index + 1}`}
+                    />
+                  </div>
+                );
+              });
+            })()}
           </div>
 
           <button
-            onClick={() => scrollTo(Math.min(currentProjects.length - 1, activeIndex + 1))}
-            disabled={activeIndex === currentProjects.length - 1}
+            onClick={() => scrollTo(Math.min(projects.length - 1, activeIndex + 1))}
+            disabled={activeIndex === projects.length - 1}
             className={`
                     p-2 rounded-full border transition-all duration-300
-                    ${activeIndex === currentProjects.length - 1
+                    ${activeIndex === projects.length - 1
                 ? 'border-primary/10 text-primary/20 cursor-not-allowed'
                 : 'border-primary/20 text-primary hover:bg-primary/5 active:scale-95 cursor-pointer'}
                 `}
@@ -337,9 +428,9 @@ const ProjectsSection = () => {
           </button>
         </div>
 
-        {/* Global Pagination Controls */}
+        {/* Global Pagination Controls (Desktop Only) */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-4 mt-12 md:mt-16">
+          <div className="hidden md:flex items-center justify-center gap-4 mt-12 md:mt-16">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}

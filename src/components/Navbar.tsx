@@ -6,6 +6,7 @@ import logo from "../assets/logo2_colorida.png";
 
 const navItems = [
   { label: "Projetos", href: "/#projetos" },
+  { label: "Feedbacks", href: "/#feedbacks" },
   { label: "Sobre", href: "/#sobre" },
   { label: "Contato", href: "/#contato" },
 ];
@@ -22,7 +23,7 @@ const Navbar = () => {
 
       // Scroll spy logic
       if (location.pathname === "/") {
-        const sections = ["projetos", "sobre", "contato"];
+        const sections = ["projetos", "feedbacks", "sobre", "contato"];
         const current = sections.find((section) => {
           const el = document.getElementById(section);
           if (el) {
