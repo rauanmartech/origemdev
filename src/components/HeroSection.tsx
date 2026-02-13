@@ -166,11 +166,11 @@ const HeroSection = () => {
               Ver Projetos
             </a>
             <Link to="/orcamentos" className="clay-btn-outline text-base md:text-lg min-w-[180px] text-center shadow-md active:scale-95 transition-transform">
-              Fale Comigo
+              Criar Meu Site Profissional
             </Link>
             {/* Solicitar Orçamento button - Mobile only */}
             <Link to="/orcamentos" className="md:hidden clay-btn-outline text-base min-w-[180px] text-center shadow-md active:scale-95 transition-transform">
-              Solicitar Orçamento
+              Receber Proposta
             </Link>
           </motion.div>
         </div>

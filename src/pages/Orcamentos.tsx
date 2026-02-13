@@ -218,7 +218,7 @@ const ServiceCard = ({ service, index, onWhatsApp }: { service: any, index: numb
                 onClick={() => onWhatsApp(service.title)}
                 className="clay-btn w-full flex items-center justify-center gap-2 group/btn text-xs md:text-base py-3 md:py-4 mt-auto"
             >
-                Contratar serviço
+                Quero Esse Modelo
                 <ChevronRight className="w-3 h-3 md:w-4 md:h-4 group-hover/btn:translate-x-1 transition-transform" />
             </button>
         </motion.div>

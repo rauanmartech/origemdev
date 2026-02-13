@@ -103,7 +103,7 @@ const Navbar = () => {
                 : ""
                 }`}
             >
-              Solicitar Orçamento
+              Receber Proposta
             </Link>
           </div>
 
@@ -162,7 +162,7 @@ const Navbar = () => {
                       : ""
                       }`}
                   >
-                    Solicitar Orçamento
+                    Receber Proposta
                   </Link>
                 </motion.div>
               </div>
