@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo2_colorida.png";
 
 const navItems = [
+  { label: "Home", href: "/#home" },
   { label: "Projetos", href: "/#projetos" },
   { label: "Feedbacks", href: "/#feedbacks" },
   { label: "Sobre", href: "/#sobre" },
@@ -14,8 +15,9 @@ const navItems = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const [activeSection, setActiveSection] = useState("home");
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,7 +44,7 @@ const Navbar = () => {
       };
 
       const observer = new IntersectionObserver(observerCallback, observerOptions);
-      const sections = ["projetos", "feedbacks", "sobre", "contato"];
+      const sections = ["home", "projetos", "feedbacks", "sobre", "contato"];
 
       sections.forEach((id) => {
         const el = document.getElementById(id);
@@ -59,6 +61,34 @@ const Navbar = () => {
   }, [location.pathname]);
 
   const isOrcamentos = location.pathname === "/orcamentos";
+
+  const handleNavClick = (e: React.MouseEvent, href: string) => {
+    const isHash = href.includes("#");
+    if (!isHash) return;
+
+    const [path, hash] = href.split("#");
+    const isHomePage = location.pathname === "/" || location.pathname === "";
+
+    if (isHomePage) {
+      e.preventDefault();
+      const element = document.getElementById(hash);
+      if (element) {
+        const offset = 80; // Navbar height offset
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+      setOpen(false);
+    }
+    // If not on home page, let the default Link behavior or <a> tag handle it
+    // But we'll use Link for better experience
+  };
 
   return (
     <nav
@@ -84,16 +114,17 @@ const Navbar = () => {
               const sectionId = item.href.replace("/#", "");
               const isActive = location.pathname === "/" && activeSection === sectionId;
               return (
-                <a
+                <Link
                   key={item.href}
-                  href={item.href}
+                  to={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
                   className={`transition-all duration-300 font-medium text-sm lg:text-base px-4 py-2 rounded-xl ${isActive
                     ? "text-primary bg-background/50 shadow-[var(--clay-shadow-inset)] scale-[0.98]"
                     : "text-muted-foreground hover:text-primary hover:bg-card/30"
                     }`}
                 >
                   {item.label}
-                </a>
+                </Link>
               );
             })}
             <Link
@@ -132,21 +163,24 @@ const Navbar = () => {
                   const sectionId = item.href.replace("/#", "");
                   const isActive = location.pathname === "/" && activeSection === sectionId;
                   return (
-                    <motion.a
+                    <motion.div
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.1 + idx * 0.05 }}
                       key={item.href}
-                      href={item.href}
-                      onClick={() => setOpen(false)}
-                      className={`flex justify-between items-center transition-all font-medium py-3 px-4 rounded-xl ${isActive
-                        ? "text-primary bg-background/60 shadow-[var(--clay-shadow-inset)]"
-                        : "text-muted-foreground hover:text-primary hover:bg-primary/5"
-                        }`}
                     >
-                      <span>{item.label}</span>
-                      <div className={`w-2 h-2 rounded-full transition-colors ${isActive ? "bg-primary" : "bg-primary/20"}`} />
-                    </motion.a>
+                      <Link
+                        to={item.href}
+                        onClick={(e) => handleNavClick(e, item.href)}
+                        className={`flex justify-between items-center transition-all font-medium py-3 px-4 rounded-xl ${isActive
+                          ? "text-primary bg-background/60 shadow-[var(--clay-shadow-inset)]"
+                          : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                          }`}
+                      >
+                        <span>{item.label}</span>
+                        <div className={`w-2 h-2 rounded-full transition-colors ${isActive ? "bg-primary" : "bg-primary/20"}`} />
+                      </Link>
+                    </motion.div>
                   );
                 })}
                 <motion.div

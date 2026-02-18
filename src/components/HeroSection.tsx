@@ -65,7 +65,7 @@ const HeroSection = () => {
   const words = ["experiências", "soluções", "produtos", "interfaces", "sistemas"];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-32 md:py-20">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-32 md:py-20">
       <div className="relative z-10 max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24 w-full">
         {/* Photo Container with Bubbles */}
         <motion.div
