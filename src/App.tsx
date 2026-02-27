@@ -11,6 +11,7 @@ import { useEffect } from "react";
 const Index = lazy(() => import("./pages/Index"));
 const Orcamentos = lazy(() => import("./pages/Orcamentos"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const ProjectTimelineNEF = lazy(() => import("./pages/ProjectTimelineNEF"));
 
 const LoadingFallback = () => (
   <div className="h-screen w-screen flex items-center justify-center bg-background">
@@ -76,6 +77,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/orcamentos" element={<Orcamentos />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/trilha/nef-seguros" element={<ProjectTimelineNEF />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
