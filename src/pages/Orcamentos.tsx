@@ -21,6 +21,57 @@ import Footer from "@/components/Footer";
 
 const services = [
     {
+        title: "Landing Page",
+        price: "1.500",
+        description: "Perfeita para campanhas específicas, lançamentos de produtos ou captura de leads. Uma página focada em conversão com design atrativo e mensagem direta que guia o visitante a uma ação específica.",
+        icon: Rocket,
+        included: [
+            "Design responsivo (mobile e desktop)",
+            "Formulário de captura de leads",
+            "Otimização para conversão",
+            "Integração com ferramentas de marketing",
+            "Seção de depoimentos",
+            "Call-to-actions estratégicos"
+        ],
+        color: "bg-blue-500/10",
+        iconColor: "text-blue-500"
+    },
+    {
+        title: "Combo 3 Landing Pages",
+        price: "3.000",
+        originalPrice: "4.500",
+        description: "A solução ideal para múltiplos negócios ou campanhas variadas. Leve 3 landing pages profissionais e economize R$ 1.500 no seu projeto. Ideal para validação de nichos.",
+        icon: Rocket,
+        included: [
+            "3 Landing Pages Completas",
+            "Design Premium Responsivo",
+            "Otimização de Conversão para todas",
+            "Integração de Leads Centralizada",
+            "Suporte prioritário na implementação",
+            "Tudo que o pacote individual oferece x3"
+        ],
+        color: "bg-indigo-500/10",
+        iconColor: "text-indigo-500"
+    },
+    {
+        title: "Combo 5 Landing Pages",
+        price: "4.500",
+        originalPrice: "7.500",
+        description: "O pacote definitivo para quem quer escala máxima. 5 landing pages de alta conversão por um valor imbatível. Economia real de R$ 3.000 para dominar seu mercado.",
+        icon: Rocket,
+        isPopular: true,
+        included: [
+            "5 Landing Pages de Alta Conversão",
+            "Estratégia Cross-Page otimizada",
+            "Design Exclusivo para cada página",
+            "Consultoria de Funil de Vendas",
+            "Velocidade de entrega otimizada",
+            "Pacote completo com 40% de desconto"
+        ],
+        color: "bg-violet-500/10",
+        iconColor: "text-violet-500"
+    },
+    {
         title: "Sistema de Agendamento Online",
         price: "800",
         description: "Organize seus atendimentos, facilite o agendamento para seus clientes e reduza o tempo gasto com mensagens e confirmações. Ideal para barbearias, clínicas e negócios que trabalham com horários marcados.",
@@ -36,22 +87,6 @@ const services = [
         ],
         color: "bg-cyan-500/10",
         iconColor: "text-cyan-500"
-    },
-    {
-        title: "Landing Page",
-        price: "1.200",
-        description: "Perfeita para campanhas específicas, lançamentos de produtos ou captura de leads. Uma página focada em conversão com design atrativo e mensagem direta que guia o visitante a uma ação específica.",
-        icon: Rocket,
-        included: [
-            "Design responsivo (mobile e desktop)",
-            "Formulário de captura de leads",
-            "Otimização para conversão",
-            "Integração com ferramentas de marketing",
-            "Seção de depoimentos",
-            "Call-to-actions estratégicos"
-        ],
-        color: "bg-blue-500/10",
-        iconColor: "text-blue-500"
     },
     {
         title: "Site Institucional",
@@ -133,6 +168,8 @@ const services = [
 const ServiceCard = ({ service, index, onWhatsApp }: { service: any, index: number, onWhatsApp: (t: string) => void }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const Icon = service.icon;
+    const hasDiscount = service.originalPrice && service.price;
+    const savings = hasDiscount ? (parseFloat(service.originalPrice.replace('.', '')) - parseFloat(service.price.replace('.', ''))) : 0;
 
     return (
         <motion.div
@@ -140,8 +177,14 @@ const ServiceCard = ({ service, index, onWhatsApp }: { service: any, index: numb
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="clay-card p-6 md:p-8 flex flex-col h-full group transition-all duration-300"
+            className={`clay-card p-6 md:p-8 flex flex-col h-full group transition-all duration-300 relative ${service.isPopular ? 'border-primary/30 ring-2 ring-primary/20' : ''}`}
         >
+            {service.isPopular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider z-20 shadow-lg shadow-primary/20">
+                    Sugerido / Melhor Valor
+                </div>
+            )}
+
             <div className="flex items-center gap-4 mb-4 md:mb-6 md:block">
                 <div className={`clay-icon shrink-0 w-12 h-12 md:w-16 md:h-16 ${service.color} mb-0 md:mb-6`}>
                     <Icon className={`w-6 h-6 md:w-8 md:h-8 ${service.iconColor}`} />
@@ -150,16 +193,31 @@ const ServiceCard = ({ service, index, onWhatsApp }: { service: any, index: numb
                     <h3 className="font-display text-lg md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors">
                         {service.title}
                     </h3>
-                    <div className="flex items-baseline gap-1 md:hidden">
-                        <span className="text-muted-foreground text-[10px]">A partir de</span>
-                        <span className="text-lg font-bold text-primary text-nowrap">R$ {service.price}</span>
+                    <div className="flex flex-col md:hidden">
+                        {hasDiscount && (
+                            <span className="text-muted-foreground text-[10px] line-through">De R$ {service.originalPrice}</span>
+                        )}
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-muted-foreground text-[10px]">A partir de</span>
+                            <span className="text-lg font-bold text-primary text-nowrap">R$ {service.price}</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="hidden md:flex items-baseline gap-1 mb-6">
-                <span className="text-muted-foreground text-sm">A partir de</span>
-                <span className="text-3xl font-bold text-primary">R$ {service.price}</span>
+            <div className="hidden md:flex flex-col mb-6">
+                {hasDiscount && (
+                    <div className="flex items-center gap-2 mb-1">
+                        <span className="text-muted-foreground text-sm line-through">De R$ {service.originalPrice}</span>
+                        <span className="bg-green-500/10 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            Economize R$ {savings.toLocaleString('pt-BR')}
+                        </span>
+                    </div>
+                )}
+                <div className="flex items-baseline gap-1">
+                    <span className="text-muted-foreground text-sm">A partir de</span>
+                    <span className="text-3xl font-bold text-primary">R$ {service.price}</span>
+                </div>
             </div>
 
             <p className="text-muted-foreground text-xs md:text-sm leading-relaxed mb-4 md:mb-8 flex-1">
