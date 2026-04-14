@@ -128,6 +128,12 @@ const Navbar = () => {
               );
             })}
             <Link
+              to="/login"
+              className="text-muted-foreground hover:text-primary transition-colors font-medium text-sm lg:text-base mr-2"
+            >
+              Login
+            </Link>
+            <Link
               to="/orcamentos"
               className={`clay-btn text-xs lg:text-sm py-2 px-6 transition-all duration-300 ${isOrcamentos
                 ? "shadow-[var(--clay-shadow-primary-active)] scale-[0.98] translate-y-0.5 opacity-90"
@@ -188,6 +194,13 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
+                  <Link
+                    to="/login"
+                    onClick={() => setOpen(false)}
+                    className="text-muted-foreground hover:text-primary transition-colors font-medium text-sm py-2 px-4 block"
+                  >
+                    Login
+                  </Link>
                   <Link
                     to="/orcamentos"
                     onClick={() => setOpen(false)}

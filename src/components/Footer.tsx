@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo2_colorida.png";
 
 const Footer = () => (
@@ -10,9 +11,14 @@ const Footer = () => (
           alt="Logo"
           className="h-8 w-auto object-contain"
         />
-        <p className="text-muted-foreground text-sm">
-          © {new Date().getFullYear()} — Feito com dedicação e muito café ☕
-        </p>
+        <div className="flex items-center gap-6">
+          <Link to="/login" className="text-[10px] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100">
+            Login
+          </Link>
+          <p className="text-muted-foreground text-sm">
+            © {new Date().getFullYear()} — Feito com dedicação e muito café ☕
+          </p>
+        </div>
       </div>
     </div>
   </footer>
