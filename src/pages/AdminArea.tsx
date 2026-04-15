@@ -48,7 +48,7 @@ const AdminArea = () => {
   const [loading, setLoading] = useState(true);
   const [loadingContent, setLoadingContent] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [contentCache, setContentCache] = useState<Record<string, { messages?: any[], briefing?: any }>>({});
+  const [contentCache, setContentCache] = useState<Record<string, { messages?: any[], briefing?: any, planning?: any[] }>>({});
   const chatImagesInputRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -145,46 +145,32 @@ const AdminArea = () => {
         }));
       } else if (activeTab === "briefing") {
         let data = null;
-        setBriefingModuleStatus('loading');
         
-        // Try Boyczuk table
-        const { data: boyczukData, error: bError } = await supabase
-          .from("boyczuk_briefings")
-          .select("*")
-          .eq("user_id", clientId)
-          .order("created_at", { ascending: false })
-          .maybeSingle();
+        // Try dynamic table name based on username
+        const tableName = `${selectedClient.username}_briefings`;
         
-        if (!bError) data = boyczukData;
-
-        if (!data) {
-          // Try dummy2 table (ecommerce)
-          try {
-            const { data: d2Data, error: d2Error } = await supabase
-              .from("dummy2_briefings")
+        try {
+          const { data: dynamicData, error: dynamicError } = await supabase
+            .from(tableName)
+            .select("*")
+            .eq("user_id", clientId)
+            .order("created_at", { ascending: false })
+            .maybeSingle();
+          
+          if (!dynamicError && dynamicData) {
+            data = dynamicData;
+          } else {
+            // Fallback for Boyczuk if dynamic fails (compatibility)
+            const { data: bData } = await supabase
+              .from("boyczuk_briefings")
               .select("*")
               .eq("user_id", clientId)
               .order("created_at", { ascending: false })
               .maybeSingle();
-            if (!d2Error) data = d2Data;
-          } catch (e) {
-            console.log("dummy2 table error:", e);
+            data = bData;
           }
-        }
-
-        if (!data) {
-          // Try dummy table (generic)
-          try {
-            const { data: d1Data, error: d1Error } = await supabase
-              .from("dummy_briefings")
-              .select("*")
-              .eq("user_id", clientId)
-              .order("created_at", { ascending: false })
-              .maybeSingle();
-            if (!d1Error) data = d1Data;
-          } catch (e) {
-            console.log("dummy table error:", e);
-          }
+        } catch (e) {
+          console.log("Briefing fetch error:", e);
         }
 
         setBriefing(data || null);
@@ -527,6 +513,8 @@ const AdminArea = () => {
                                 <img 
                                   src={msg.image_urls[0]} 
                                   alt="Chat" 
+                                  loading="lazy"
+                                  decoding="async"
                                   className="max-h-60 rounded-2xl border shadow-sm object-cover bg-muted w-full hover:brightness-90 transition-all" 
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -572,11 +560,7 @@ const AdminArea = () => {
                           >
                             {selectedImages.map((file, i) => (
                               <div key={i} className="relative w-20 h-20">
-                                <img 
-                                  src={URL.createObjectURL(file)} 
-                                  className="w-full h-full object-cover rounded-xl border border-border" 
-                                  alt="Preview"
-                                />
+                                <PreviewImage file={file} />
                                 <button 
                                   onClick={(e) => {
                                     e.preventDefault();
@@ -587,7 +571,7 @@ const AdminArea = () => {
                                 >
                                   <X size={12} />
                                 </button>
-                              </div>
+                               </div>
                             ))}
                           </motion.div>
                         )}
@@ -652,70 +636,51 @@ const AdminArea = () => {
                     ) : (
                       <div className="max-w-5xl mx-auto space-y-10 pb-20">
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/50 pb-8">
-                          <div className="space-y-2 text-center md:text-left">
-                            <div className="inline-flex px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
-                              Respostas do Cliente
+                          <div className="space-y-4 text-center md:text-left">
+                            <div className="inline-flex px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-widest border border-primary/20">
+                              Ficha de Briefing do Cliente
                             </div>
-                            <h2 className="text-3xl md:text-4xl font-bold font-display">
-                              {briefing.artist_name || briefing.store_name || briefing.project_name || 'Resumo do Projeto'}
-                            </h2>
-                            <p className="text-muted-foreground text-sm">Enviado em {new Date(briefing.created_at).toLocaleDateString()}</p>
+                            <div>
+                              <h2 className="text-3xl md:text-5xl font-bold font-display tracking-tight">
+                                {briefing.artist_name || briefing.store_name || briefing.project_name || 'Projeto ' + (selectedClient.full_name || selectedClient.username)}
+                              </h2>
+                              <p className="text-muted-foreground mt-2 flex items-center justify-center md:justify-start gap-2">
+                                <Clock size={14} /> Enviado em {new Date(briefing.created_at).toLocaleDateString()} às {new Date(briefing.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="hidden md:block">
+                             <div className="bg-white p-4 rounded-2xl shadow-sm border border-border flex items-center gap-3">
+                               <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+                                 <FileText size={20} />
+                               </div>
+                               <div className="text-left">
+                                 <p className="text-[10px] font-bold text-muted-foreground uppercase opacity-60">Status</p>
+                                 <p className="text-xs font-bold text-green-600">Completo & Recebido</p>
+                               </div>
+                             </div>
                           </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          <div className="clay-card p-6 space-y-5">
-                            <h4 className="font-bold flex items-center gap-2 text-primary border-b border-primary/10 pb-2">
-                              <Heart size={16} /> Base do Projeto
-                            </h4>
-                            <div className="space-y-4">
-                              <AdminSummaryItem label="Definição" value={briefing.art_description || briefing.description || briefing.vibe} />
-                              <AdminSummaryItem label="Objetivos" value={briefing.main_objective?.join(", ") || briefing.niche} />
-                              <AdminSummaryItem label="Público" value={briefing.target_audience} />
-                            </div>
-                          </div>
-
-                          <div className="clay-card p-6 space-y-5">
-                            <h4 className="font-bold flex items-center gap-2 text-amber-500 border-b border-amber-500/10 pb-2">
-                              <Palette size={16} /> Identidade Visual
-                            </h4>
-                            <div className="space-y-4">
-                              <AdminSummaryItem label="Estética" value={briefing.aesthetic_description || briefing.desired_vibe || briefing.brand_tone} />
-                              <AdminSummaryItem label="Cores" value={briefing.colors?.join(", ")} />
-                              <AdminSummaryItem label="Produtos/Features" value={briefing.product_types?.join(", ") || briefing.features?.join(", ")} />
-                            </div>
-                          </div>
-
-                          <div className="clay-card p-6 space-y-5">
-                            <h4 className="font-bold flex items-center gap-2 text-green-500 border-b border-green-500/10 pb-2">
-                              <Briefcase size={16} /> Comercial & Vendas
-                            </h4>
-                            <div className="space-y-4">
-                              <AdminSummaryItem label="Venda Direta" value={briefing.sell_directly} />
-                              <AdminSummaryItem label="Método" value={briefing.sell_method} />
-                              <AdminSummaryItem label="Membros" value={briefing.club_status || briefing.has_membership} />
-                            </div>
-                          </div>
-
-                          <div className="clay-card p-6 space-y-5">
-                            <h4 className="font-bold flex items-center gap-2 text-blue-500 border-b border-blue-500/10 pb-2">
-                              <MessageSquare size={16} /> Tom de Voz
-                            </h4>
-                            <div className="space-y-4">
-                              <AdminSummaryItem label="Estilo" value={briefing.communication_style?.join(", ")} />
-                              <AdminSummaryItem label="O que EVITAR" value={briefing.negative_expectations} />
-                            </div>
-                          </div>
-
-                          <div className="clay-card p-6 space-y-5 lg:col-span-2">
-                            <h4 className="font-bold flex items-center gap-2 text-purple-500 border-b border-purple-500/10 pb-2">
-                              <CheckCircle size={16} /> Expectativas Finais
-                            </h4>
-                            <div className="space-y-4">
-                              <AdminSummaryItem label="Visão Final" value={briefing.expectations_final} />
-                              <AdminSummaryItem label="Prazo" value={briefing.deadline} />
-                            </div>
-                          </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {Object.entries(briefing)
+                            .filter(([key, value]) => {
+                              if (["id", "user_id", "created_at", "updated_at"].includes(key)) return false;
+                              if (value === null || value === undefined) return false;
+                              if (Array.isArray(value) && value.length === 0) return false;
+                              if (typeof value === "string" && value.trim() === "") return false;
+                              if (["artist_name", "store_name", "project_name"].includes(key)) return false;
+                              return true;
+                            })
+                            .map(([key, value]) => (
+                              <AdminSummaryItem 
+                                key={key} 
+                                label={key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} 
+                                value={value} 
+                              />
+                            ))
+                          }
                         </div>
                       </div>
                     )}
@@ -889,17 +854,125 @@ const AdminArea = () => {
   );
 };
 
-const AdminSummaryItem = ({ label, value }: { label: string, value: any }) => (
-  <div>
-    <p className="text-[10px] uppercase font-bold text-muted-foreground opacity-60">{label}</p>
-    <p className="text-sm font-medium mt-1 leading-relaxed">
-      {typeof value === 'string' && value.startsWith('http') ? (
-        <a href={value} target="_blank" rel="noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
-          Ver link <ChevronRight size={12} />
-        </a>
-      ) : value || <span className="text-muted-foreground/40 italic">Não informado</span>}
-    </p>
-  </div>
-);
+const PreviewImage = ({ file }: { file: File }) => {
+  const [url, setUrl] = useState<string>("");
+
+  useEffect(() => {
+    const objectUrl = URL.createObjectURL(file);
+    setUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [file]);
+
+  if (!url) return <div className="w-full h-full bg-muted/20 animate-pulse rounded-xl" />;
+
+  return (
+    <img 
+      src={url} 
+      className="w-full h-full object-cover rounded-xl border border-border" 
+      alt="Preview"
+      loading="lazy"
+      decoding="async"
+    />
+  );
+};
+
+const AdminSummaryItem = React.memo(({ label, value }: { label: string, value: any }) => {
+  const downloadAll = async (urls: string[]) => {
+    toast.info(`Iniciando download de ${urls.length} arquivos...`);
+    for (const url of urls) {
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        const name = url.split('/').pop()?.split('?')[0] || `arquivo-${Date.now()}`;
+        link.download = name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+        await new Promise(r => setTimeout(r, 200)); // Delay to avoid browser blocking
+      } catch (e) {
+        console.error("Erro no download:", e);
+      }
+    }
+  };
+
+  const renderValue = () => {
+    if (Array.isArray(value)) {
+      // Check if it's an array of URLs (images/files)
+      if (value.length > 0 && typeof value[0] === 'string' && (value[0].startsWith('http') || value[0].includes('supabase.co/storage'))) {
+         return (
+           <div className="mt-3 space-y-2">
+             <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-[1.5rem] border border-primary/10">
+               <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-primary">
+                 <ImageIcon size={24} />
+               </div>
+               <div>
+                 <p className="text-sm font-bold">{value.length} arquivos anexados</p>
+                 <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight opacity-60">Galeria de Mídia</p>
+               </div>
+             </div>
+             <div className="flex gap-2">
+               <button 
+                 onClick={() => downloadAll(value)}
+                 className="flex-1 flex items-center justify-center gap-2 py-3 bg-primary text-white text-[10px] font-bold uppercase tracking-widest rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-primary/20"
+               >
+                 <Download size={14} /> Baixar Tudo
+               </button>
+             </div>
+           </div>
+         );
+      }
+      return value.join(", ");
+    }
+    
+    if (typeof value === 'string') {
+      if (value.startsWith('http') || value.includes('supabase.co/storage')) {
+        // Individual image/file attachment
+        if (value.match(/\.(jpeg|jpg|gif|png|webp|pdf|zip)$/i) || value.includes('storage/v1/object/public')) {
+          return (
+            <div className="mt-3 flex items-center gap-3 p-4 bg-amber-500/5 rounded-[1.5rem] border border-amber-500/10">
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-amber-500">
+                <FileText size={24} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold truncate">Anexo Individual</p>
+                <div className="flex gap-3 mt-1">
+                  <button 
+                    onClick={() => downloadAll([value])}
+                    className="text-amber-600 text-[10px] font-bold uppercase tracking-tighter hover:underline flex items-center gap-1"
+                  >
+                    <Download size={10} /> Baixar
+                  </button>
+                  <a href={value} target="_blank" rel="noreferrer" className="text-muted-foreground text-[10px] font-bold uppercase tracking-tighter hover:text-primary flex items-center gap-1">
+                    <ExternalLink size={10} /> Abrir
+                  </a>
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <a href={value} target="_blank" rel="noreferrer" className="text-primary hover:underline inline-flex items-center gap-1 mt-2 text-sm font-bold">
+            Ver link externo <ExternalLink size={14} />
+          </a>
+        );
+      }
+    }
+    
+    return value || <span className="text-muted-foreground/40 italic">Não informado</span>;
+  };
+
+  return (
+    <div className="bg-white/50 p-6 rounded-[2rem] border border-border/40 hover:bg-white hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col h-full group">
+      <p className="text-[10px] uppercase font-bold text-muted-foreground opacity-60 tracking-widest mb-1 group-hover:text-primary transition-colors">{label}</p>
+      <div className="text-sm font-medium leading-relaxed text-foreground/90 flex-1">
+        {renderValue()}
+      </div>
+    </div>
+  );
+});
 
 export default AdminArea;
