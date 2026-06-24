@@ -10,6 +10,7 @@ import { useEffect } from "react";
 // Lazy load pages for code splitting with absolute paths
 const Index = lazy(() => import("@/pages/Index"));
 const Orcamentos = lazy(() => import("@/pages/Orcamentos"));
+const Parcerias = lazy(() => import("@/pages/Parcerias"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ProjectTimelineNEF = lazy(() => import("@/pages/ProjectTimelineNEF"));
 const BriefingBoyczuk = lazy(() => import("@/pages/BriefingBoyczuk"));
@@ -79,6 +80,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/orcamentos" element={<Orcamentos />} />
+            <Route path="/parcerias" element={<Parcerias />} />
+            <Route path="/parcerias/kit-de-guerra" element={<Parcerias />} />
             <Route path="/trilha/nef-seguros" element={<ProjectTimelineNEF />} />
             <Route path="/briefing/boyczuk" element={<BriefingBoyczuk />} />
             <Route path="/login" element={<Login />} />

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo2_colorida.png";
+import logo from "../assets/logo.png";
 
 const Footer = () => (
   <footer className="py-20 px-4 text-center">
