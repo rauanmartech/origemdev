@@ -11,6 +11,8 @@ import { useEffect } from "react";
 const Index = lazy(() => import("@/pages/Index"));
 const Orcamentos = lazy(() => import("@/pages/Orcamentos"));
 const Parcerias = lazy(() => import("@/pages/Parcerias"));
+const Projetos = lazy(() => import("@/pages/Projetos"));
+const ProjectDetails = lazy(() => import("@/pages/ProjectDetails"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const ProjectTimelineNEF = lazy(() => import("@/pages/ProjectTimelineNEF"));
 const BriefingBoyczuk = lazy(() => import("@/pages/BriefingBoyczuk"));
@@ -87,6 +89,8 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/cliente" element={<ClientArea />} />
             <Route path="/admin" element={<AdminArea />} />
+            <Route path="/projetos" element={<Projetos />} />
+            <Route path="/projetos/:id" element={<ProjectDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

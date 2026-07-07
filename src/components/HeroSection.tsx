@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { ArrowDown, Camera, Code, Cpu, Database, Terminal } from "lucide-react";
+import { Zap, Layout, Code, Server, ArrowUpRight, ArrowRight } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import heroImage from "../assets/1000119534.jpg";
+import heroBg from "../assets/hero-section.jpeg";
 
 const DecodingText = ({ words, interval = 3000, duration = 500 }: { words: string[], interval?: number, duration?: number }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,10 +52,10 @@ const DecodingText = ({ words, interval = 3000, duration = 500 }: { words: strin
   }, [currentIndex, decode, interval, words]);
 
   return (
-    <span className="inline-block min-w-[4ch] text-primary relative">
+    <span className="inline-block min-w-[4ch] relative" style={{ color: "hsl(25, 95%, 53%)" }}>
       {displayText}
       {isDecoding && (
-        <span className="absolute -right-1 top-0 w-[2px] h-full bg-primary animate-pulse" />
+        <span className="absolute -right-1 top-0 w-[2px] h-full animate-pulse" style={{ background: "hsl(25, 95%, 53%)" }} />
       )}
     </span>
   );
@@ -65,76 +65,47 @@ const HeroSection = () => {
   const words = ["experiências", "soluções", "produtos", "interfaces", "sistemas"];
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 py-32 md:py-20">
-      <div className="relative z-10 max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24 w-full">
-        {/* Photo Container with Bubbles */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7 }}
-          className="relative shrink-0 mb-8 lg:mb-0"
-        >
-          {/* Main Photo Card - Increased Size */}
-          <div className="clay-card w-56 h-56 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden relative z-10 border border-primary/10 shadow-xl">
-            <img
-              src={heroImage}
-              alt="Perfil"
-              width="384"
-              height="384"
-              fetchpriority="high"
-              decoding="async"
-              className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-            />
-          </div>
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center px-4 py-32 md:py-20"
+      style={{
+        backgroundImage: `url(${heroBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Left-to-right white fade — solid on left, transparent at center */}
+      <div
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{
+          background: "linear-gradient(to right, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 25%, transparent 55%)",
+        }}
+      />
 
-          {/* Programming Bubbles - Adjusted positions */}
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="clay-card absolute -top-4 -right-4 md:-top-6 md:-right-6 w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center z-20 bg-card/80 backdrop-blur-sm shadow-lg border border-primary/5"
-          >
-            <Code className="w-7 h-7 md:w-10 md:h-10 text-primary" />
-          </motion.div>
-
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="clay-card absolute bottom-10 -left-6 md:bottom-16 md:-left-12 w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center z-20 bg-card/80 backdrop-blur-sm shadow-lg border border-primary/5"
-          >
-            <Cpu className="w-6 h-6 md:w-8 md:h-8 text-primary" />
-          </motion.div>
-
-          <motion.div
-            animate={{ x: [0, 8, 0] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            className="clay-card absolute -bottom-4 right-8 md:-bottom-6 md:right-12 w-10 h-10 md:w-14 md:h-14 rounded-xl flex items-center justify-center z-20 bg-card/80 backdrop-blur-sm shadow-md border border-primary/5"
-          >
-            <Database className="w-5 h-5 md:w-7 md:h-7 text-primary" />
-          </motion.div>
-
-          <motion.div
-            animate={{ x: [0, -8, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="clay-card absolute top-10 -right-6 md:top-16 md:-right-10 w-10 h-10 md:w-14 md:h-14 rounded-xl flex items-center justify-center z-20 bg-card/80 backdrop-blur-sm shadow-md border border-primary/5"
-          >
-            <Terminal className="w-5 h-5 md:w-7 md:h-7 text-primary" />
-          </motion.div>
-        </motion.div>
-
-        {/* Text content */}
-        <div className="text-center lg:text-left flex-1 px-2">
+      <div className="relative z-10 max-w-6xl mx-auto w-full">
+        {/* Text content — left aligned */}
+        <div className="text-left flex-1 px-2 max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <span className="clay-badge text-xs md:text-sm mb-6 inline-block">
+            <span
+              className="text-xs md:text-sm mb-6 inline-block rounded-xl px-3 py-1 font-medium"
+              style={{
+                background: "hsl(25 95% 53% / 0.12)",
+                color: "hsl(25, 95%, 53%)",
+                boxShadow: "4px 4px 10px hsl(0 0% 82%), -2px -2px 8px hsl(0 0% 100% / 0.8)",
+              }}
+            >
               Desenvolvedor Web Fullstack
             </span>
           </motion.div>
 
           <motion.h1
-            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.1] mb-6"
+            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6"
+            style={{ color: "hsl(20, 14%, 10%)" }}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15 }}
@@ -142,52 +113,115 @@ const HeroSection = () => {
             Transformo ideias em{" "}
             <br className="md:hidden" />
             <DecodingText words={words} />
-            <div className="text-foreground">digitais</div>
+            <div style={{ color: "hsl(20, 14%, 10%)" }}>digitais</div>
           </motion.h1>
 
           <motion.p
-            className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 mb-10 md:mb-8 leading-relaxed px-4 md:px-0"
+            className="text-base md:text-xl max-w-xl mb-10 md:mb-8 leading-relaxed"
+            style={{ color: "hsl(20, 10%, 42%)" }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
           >
             Crio aplicações web modernas e performáticas, com design que encanta{" "}
-            <span className="text-primary font-medium">desde a origem</span>.
+            <span style={{ color: "hsl(25, 95%, 53%)", fontWeight: 500 }}>desde a origem</span>.
             Do conceito ao deploy, cada detalhe importa.
           </motion.p>
 
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-4"
+            className="flex flex-col sm:flex-row gap-4 justify-start mt-6"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
           >
-            <a href="#projetos" className="clay-btn text-base md:text-lg min-w-[180px] text-center shadow-lg active:scale-95 transition-transform">
-              Ver Projetos
+            {/* Primary button */}
+            <a
+              href="#projetos"
+              className="group flex items-center justify-between gap-4 md:gap-8 rounded-full bg-[#181c20] text-white p-1.5 pl-6 md:pl-8 active:scale-95 transition-transform"
+              style={{
+                boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)"
+              }}
+            >
+              <span className="uppercase text-xs md:text-sm font-bold tracking-wider pt-0.5">Ver Projetos</span>
+              <div className="rounded-full flex items-center justify-center w-10 h-10 md:w-11 md:h-11 shrink-0" style={{ background: "hsl(25, 95%, 53%)" }}>
+                <ArrowUpRight className="w-5 h-5 text-white transition-transform duration-300 group-hover:rotate-45" strokeWidth={2.5} />
+              </div>
             </a>
-            <Link to="/orcamentos" className="clay-btn-outline text-base md:text-lg min-w-[180px] text-center shadow-md active:scale-95 transition-transform">
-              Criar Meu Site Profissional
-            </Link>
-            {/* Solicitar Orçamento button - Mobile only */}
-            <Link to="/orcamentos" className="md:hidden clay-btn-outline text-base min-w-[180px] text-center shadow-md active:scale-95 transition-transform">
-              Receber Proposta
+
+            {/* Secondary button */}
+            <Link
+              to="/orcamentos"
+              className="group flex items-center justify-between gap-4 md:gap-8 rounded-full bg-white text-gray-800 p-1.5 pl-6 md:pl-8 active:scale-95 transition-all shadow-md hover:shadow-lg"
+              style={{
+                border: "1px solid rgba(0,0,0,0.05)"
+              }}
+            >
+              <span className="uppercase text-xs md:text-sm font-bold tracking-wider pt-0.5">Criar Site Profissional</span>
+              <div className="rounded-full flex items-center justify-center w-10 h-10 md:w-11 md:h-11 shrink-0 shadow-sm" style={{ background: "hsl(25, 95%, 53%)" }}>
+                <ArrowUpRight className="w-5 h-5 text-white transition-transform duration-300 group-hover:rotate-45" strokeWidth={2.5} />
+              </div>
             </Link>
           </motion.div>
         </div>
       </div>
 
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block z-30"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 1 }}
-      >
-        <a href="#projetos" className="inline-block animate-float relative z-30">
-          <div className="clay-icon bg-card shadow-lg border border-primary/10">
-            <ArrowDown className="w-6 h-6 text-primary" />
+
+      {/* Futuristic Feature Band (Leaks out of bottom) */}
+      <div className="absolute left-0 right-0 -bottom-16 md:-bottom-10 z-40 px-4 flex justify-center">
+        <motion.div
+          className="bg-white rounded-[1.5rem] max-w-7xl w-full py-4 px-6 md:py-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-4 divide-y md:divide-y-0 md:divide-x divide-gray-100"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.7 }}
+          style={{
+            boxShadow: "0 25px 50px -12px rgba(25, 10, 5, 0.15), 0 0 0 1px rgba(255, 102, 0, 0.1), inset 0 0 20px rgba(255, 102, 0, 0.03)",
+          }}
+        >
+          {/* Feature 1 */}
+          <div className="flex flex-row items-center gap-3 pt-3 md:pt-0 md:pl-4 first:pt-0 first:pl-0">
+            <div className="p-2 rounded-lg shrink-0" style={{ background: "hsl(25 95% 53% / 0.1)" }}>
+              <Zap className="w-5 h-5" style={{ color: "hsl(25, 95%, 53%)" }} />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-gray-900 leading-tight">Alta Performance</h3>
+              <p className="text-[11px] md:text-xs text-gray-500 leading-snug mt-0.5">Carregamento e SEO otimizados.</p>
+            </div>
           </div>
-        </a>
-      </motion.div>
+
+          {/* Feature 2 */}
+          <div className="flex flex-row items-center gap-3 pt-3 md:pt-0 md:pl-6">
+            <div className="p-2 rounded-lg shrink-0" style={{ background: "hsl(25 95% 53% / 0.1)" }}>
+              <Layout className="w-5 h-5" style={{ color: "hsl(25, 95%, 53%)" }} />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-gray-900 leading-tight">Design Moderno</h3>
+              <p className="text-[11px] md:text-xs text-gray-500 leading-snug mt-0.5">Interfaces e micro-interações.</p>
+            </div>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="flex flex-row items-center gap-3 pt-3 md:pt-0 md:pl-6">
+            <div className="p-2 rounded-lg shrink-0" style={{ background: "hsl(25 95% 53% / 0.1)" }}>
+              <Code className="w-5 h-5" style={{ color: "hsl(25, 95%, 53%)" }} />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-gray-900 leading-tight">Tecnologia de Ponta</h3>
+              <p className="text-[11px] md:text-xs text-gray-500 leading-snug mt-0.5">Stacks modernas do mercado.</p>
+            </div>
+          </div>
+
+          {/* Feature 4 */}
+          <div className="flex flex-row items-center gap-3 pt-3 md:pt-0 md:pl-6">
+            <div className="p-2 rounded-lg shrink-0" style={{ background: "hsl(25 95% 53% / 0.1)" }}>
+              <Server className="w-5 h-5" style={{ color: "hsl(25, 95%, 53%)" }} />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-gray-900 leading-tight">Escalabilidade</h3>
+              <p className="text-[11px] md:text-xs text-gray-500 leading-snug mt-0.5">Arquitetura robusta para crescer.</p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 };

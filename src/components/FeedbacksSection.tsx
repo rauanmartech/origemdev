@@ -1,137 +1,157 @@
-import { motion } from "framer-motion";
-import { useRef } from "react";
-import { Quote } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import bgImage from "../assets/feedbacks-origem.jpeg";
+
+// Map filenames to structured data
+const feedbacksData = [
+  {
+    file: "feedback_ana_brant",
+    name: "Ana Brant",
+    role: "Professora de Yoga",
+    detail: "Landing Page",
+  },
+  {
+    file: "feedback_ruan_bara\u00FAna",
+    name: "Ruan Baraúna",
+    role: "Preparador Físico",
+    detail: "Landing Page",
+  },
+  {
+    file: "feedback_toninho",
+    name: "Toninho",
+    role: "Empresário",
+    detail: "Site Institucional / CRM",
+  },
+  {
+    file: "feedback_bendegar",
+    name: "Bendegar",
+    role: "Tatuadora",
+    detail: "Site Institucional",
+  },
+  {
+    file: "feedback_camila",
+    name: "Camilla",
+    role: "Tatuadora",
+    detail: "E-commerce + Sistema de Pagamentos",
+  },
+];
+
+// Eager import all feedback images
 const feedbackImages = import.meta.glob('../assets/feedbacks/feedback_*.{png,jpg,jpeg,webp}', { eager: true, as: 'url' });
 
-const feedbacks = Object.entries(feedbackImages).map(([path, url], index) => {
-    // Extract filename from path (e.g., "../assets/feedbacks/feedback_ana.jpg" -> "ana")
-    const fileName = path.split('/').pop()?.split('.')[0] || "";
-    const namePart = fileName.replace('feedback_', '');
-
-    // Format name: "ana_brant" -> "Ana Brant"
-    const formattedName = namePart
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-
-    // Deterministic random positions based on index to ensure consistent layout
-    // We distribute them across the container using a grid-like or scattered approach
-    const positions = [
-        { x: "10%", y: "10%", rot: -5 },
-        { x: "60%", y: "20%", rot: 3 },
-        { x: "30%", y: "45%", rot: -2 },
-        { x: "70%", y: "50%", rot: 6 },
-        { x: "20%", y: "25%", rot: -4 },
-        { x: "50%", y: "10%", rot: 2 },
-        { x: "15%", y: "55%", rot: -3 },
-        { x: "80%", y: "30%", rot: 5 },
-    ];
-
-    const pos = positions[index % positions.length];
-
-    return {
-        id: index + 1,
-        image: url,
-        name: formattedName,
-        rotation: pos.rot,
-        x: pos.x,
-        y: pos.y
-    };
-});
+// Match structured data to actual imported images by filename stem
+const feedbacks = feedbacksData.map(item => {
+  const matchKey = Object.keys(feedbackImages).find(k => k.includes(item.file));
+  return {
+    ...item,
+    image: matchKey ? feedbackImages[matchKey] as string : null,
+  };
+}).filter(f => f.image !== null);
 
 const FeedbacksSection = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = feedbacks[activeIndex];
 
-    // Helper to get random positions that look "scattered" but readable
-    // For simplicity, I'm using pre-defined approximate positions in percentage 
-    // to avoid overlap mess, but they can still be dragged.
+  return (
+    <section id="feedbacks" className="relative w-full min-h-screen flex flex-col items-stretch overflow-hidden">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 w-full h-full"
+        style={{
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "left center",
+          backgroundRepeat: "no-repeat"
+        }}
+      />
 
-    return (
-        <section id="feedbacks" className="py-24 relative overflow-hidden">
-            <div className="max-w-6xl mx-auto px-4">
-                <div className="text-center mb-16">
-                    <span className="clay-badge text-sm mb-4 inline-block">Feedbacks</span>
-                    <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
-                        O que dizem sobre <span className="text-primary">mim</span>
-                    </h2>
-                    <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-                        Confira como foi a experiência de quem já tirou o projeto do papel comigo.
-                    </p>
+      {/* Gradient Overlay */}
+      {/* Mobile */}
+      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/90 to-transparent md:bg-none" />
+      {/* Desktop: left 10% opacity, right fades to solid white */}
+      <div
+        className="absolute inset-0 hidden md:block"
+        style={{
+          background: "linear-gradient(to right, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.1) 42%, rgba(255,255,255,0.7) 55%, rgba(255,255,255,1) 75%)"
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 min-h-screen items-center py-16 md:py-24">
+        {/* Left Side — empty, shows background */}
+        <div className="hidden md:block" />
+
+        {/* Right Side — feedbacks */}
+        <div className="flex flex-col h-full justify-center">
+          {/* Header */}
+          <div className="mb-8 mt-8 md:mt-0">
+            <span className="clay-badge text-sm mb-4 inline-block bg-white shadow-sm border border-gray-100">Feedbacks</span>
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+              O que dizem sobre <span className="text-primary">mim</span>
+            </h2>
+            <p className="text-gray-500 text-base">
+              Confira como foi a experiência de quem já tirou o projeto do papel comigo.
+            </p>
+          </div>
+
+          {/* Feedback Row Layout: image left (half width), details right */}
+          <div className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full">
+            {feedbacks.map((feedback, index) => (
+              <motion.div
+                key={feedback.file}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                viewport={{ once: true, margin: "-30px" }}
+                onClick={() => setActiveIndex(index)}
+                className={`flex flex-row items-start gap-4 rounded-2xl p-3 cursor-pointer transition-all duration-200 border ${
+                  activeIndex === index
+                    ? "border-primary/60 bg-white shadow-lg"
+                    : "border-primary/20 bg-white/70 hover:bg-white hover:border-primary/40 hover:shadow-md"
+                }`}
+              >
+                {/* Print — half card width, natural height */}
+                <div className="shrink-0 w-1/2 rounded-xl overflow-hidden border border-gray-100 shadow-sm bg-gray-50">
+                  {feedback.image && (
+                    <img
+                      src={feedback.image}
+                      alt={feedback.name}
+                      loading="lazy"
+                      className="w-full h-auto block"
+                    />
+                  )}
                 </div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    viewport={{ once: true }}
-                    className="relative w-full h-[600px] md:h-[700px] rounded-[3rem] bg-card flex items-center justify-center overflow-hidden border border-primary/5"
-                    style={{ boxShadow: 'var(--clay-shadow-inset)' }}
-                    ref={containerRef}
-                >
-                    {/* Background Decor */}
-                    <div className="absolute inset-0 opacity-30 pointer-events-none flex items-center justify-center">
-                        <Quote className="w-96 h-96 text-primary/5" />
-                    </div>
-
-                    <div className="absolute top-8 left-8 text-muted-foreground/40 font-handwriting text-xl pointer-events-none select-none">
-                        Arraste os polaroids...
-                    </div>
-
-                    {feedbacks.map((item, index) => (
-                        <Polaroid
-                            key={item.id}
-                            item={item}
-                            containerRef={containerRef}
-                            index={index}
-                        />
+                {/* Details */}
+                <div className="flex flex-col justify-center min-w-0">
+                  {/* 5 Stars */}
+                  <div className="flex items-center gap-0.5 mb-1.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <svg key={i} className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="hsl(25, 95%, 53%)">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
                     ))}
-                </motion.div>
-            </div>
-        </section>
-    );
-};
-
-const Polaroid = ({ item, containerRef, index }: { item: any; containerRef: any; index: number }) => {
-    // Generate random initial positions if not using the preset ones, 
-    // but preset ones (x, y) give a better initial layout.
-
-    return (
-        <motion.div
-            drag
-            dragConstraints={containerRef}
-            whileHover={{ scale: 1.1, zIndex: 50, rotate: 0 }}
-            whileDrag={{ scale: 1.15, zIndex: 100, rotate: 0, cursor: "grabbing" }}
-            initial={{
-                rotate: item.rotation,
-                x: Math.random() * 50 - 25, // minimal random offset
-                y: Math.random() * 50 - 25
-            }}
-            className="absolute p-3 pb-8 bg-white shadow-xl rounded-sm cursor-grab w-48 md:w-64 transform-gpu transition-shadow duration-300"
-            style={{
-                top: item.y,
-                left: item.x,
-                backfaceVisibility: 'hidden',
-                boxShadow: "5px 5px 15px rgba(0,0,0,0.15)"
-            }}
-        >
-            {/* Pin or Tape could be added here for detail, but plain polaroid is fine */}
-            {/* Pin or Tape could be added here for detail, but plain polaroid is fine */}
-            <div className="w-full overflow-hidden bg-gray-100 mb-3 pointer-events-none">
-                <img
-                    src={item.image}
-                    alt={item.name}
-                    width={400}
-                    height={400}
-                    loading="lazy"
-                    className="w-full h-auto select-none block"
-                    draggable={false}
-                />
-            </div>
-            <p className="font-handwriting font-medium text-center text-gray-800 text-lg md:text-xl select-none pointer-events-none">
-                {item.name}
-            </p>
-        </motion.div>
-    );
+                  </div>
+                  <span
+                    className="font-display font-bold text-lg md:text-xl leading-tight truncate"
+                    style={{ color: "hsl(25, 95%, 50%)" }}
+                  >
+                    {feedback.name}
+                  </span>
+                  <span className="text-gray-700 text-sm font-medium mt-0.5 truncate">
+                    {feedback.role}
+                  </span>
+                  <span className="text-gray-400 text-xs mt-1 truncate">
+                    {feedback.detail}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default FeedbacksSection;
