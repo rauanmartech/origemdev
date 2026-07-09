@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { MapPin, Languages, Briefcase, Sparkles } from "lucide-react";
 import sobreImg from "../assets/sobre.jpg";
+import sobreMascot from "../assets/sobre.webp";
 
 const highlights = [
   { icon: MapPin, label: "Localização", desc: "Belo Horizonte, Brasil" },
@@ -33,9 +34,15 @@ const AboutSection = () => {
   return (
     <section
       id="sobre"
-      className="relative py-16 md:py-24 px-4"
+      className="relative py-16 md:py-24 px-4 overflow-hidden md:overflow-visible"
       style={{ background: darkBg }}
     >
+      {/* Desktop Mascot */}
+      <img
+        src={sobreMascot}
+        alt="Mascote Sobre"
+        className="hidden md:block absolute bottom-0 right-0 z-20 h-[400px] lg:h-[500px] w-auto object-contain pointer-events-none"
+      />
       {/* Top Marquee */}
       <div className="absolute top-0 left-0 right-0 z-20">
         <MarqueeBand />
@@ -49,6 +56,7 @@ const AboutSection = () => {
       <div className="max-w-6xl mx-auto relative z-10 pt-6 pb-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <motion.div
+            className="text-center md:text-left"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -128,7 +136,7 @@ const AboutSection = () => {
               return (
                 <motion.div
                   key={index}
-                  className="p-6 flex items-start gap-5 relative group overflow-visible rounded-3xl"
+                  className="p-6 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4 md:gap-5 relative group overflow-visible rounded-3xl"
                   style={{
                     background: cardBg,
                     border: `1px solid ${cardBorder}`,

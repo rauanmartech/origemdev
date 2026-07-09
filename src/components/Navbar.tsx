@@ -100,11 +100,26 @@ const Navbar = () => {
           className={`clay-card px-6 py-3 flex items-center justify-between border border-primary/5 ${scrolled ? "bg-card/90 backdrop-blur-md shadow-lg" : "bg-card/50 backdrop-blur-sm shadow-md"
             }`}
         >
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link to="/" className="relative flex items-center gap-2 hover:opacity-80 transition-opacity">
+            {/* Invisible original image to maintain dimensions */}
             <img
               src={logo}
               alt="Logo"
-              className="h-9 w-auto object-contain"
+              className="h-9 w-auto object-contain opacity-0"
+            />
+            {/* Colored overlay using CSS mask */}
+            <div 
+              className="absolute inset-0 bg-primary"
+              style={{
+                maskImage: `url(${logo})`,
+                WebkitMaskImage: `url(${logo})`,
+                maskSize: "contain",
+                WebkitMaskSize: "contain",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: "left center",
+                WebkitMaskPosition: "left center"
+              }}
             />
           </Link>
 

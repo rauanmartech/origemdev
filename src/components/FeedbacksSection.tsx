@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import bgImage from "../assets/feedbacks-origem.jpeg";
+import bgMobileImage from "../assets/feedback-mobile.webp";
 
 // Map filenames to structured data
 const feedbacksData = [
@@ -53,10 +54,10 @@ const FeedbacksSection = () => {
   const active = feedbacks[activeIndex];
 
   return (
-    <section id="feedbacks" className="relative w-full min-h-screen flex flex-col items-stretch overflow-hidden">
-      {/* Background Image */}
+    <section id="feedbacks" className="relative w-full flex flex-col items-stretch overflow-hidden md:min-h-screen bg-white md:bg-transparent">
+      {/* Desktop Background Image */}
       <div
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full hidden md:block"
         style={{
           backgroundImage: `url(${bgImage})`,
           backgroundSize: "cover",
@@ -65,10 +66,7 @@ const FeedbacksSection = () => {
         }}
       />
 
-      {/* Gradient Overlay */}
-      {/* Mobile */}
-      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/90 to-transparent md:bg-none" />
-      {/* Desktop: left 10% opacity, right fades to solid white */}
+      {/* Desktop Gradient Overlay */}
       <div
         className="absolute inset-0 hidden md:block"
         style={{
@@ -76,15 +74,29 @@ const FeedbacksSection = () => {
         }}
       />
 
+      {/* Mobile Banner Image */}
+      <div 
+        className="w-full h-[50vh] md:hidden relative shrink-0"
+        style={{
+          backgroundImage: `url(${bgMobileImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "top center",
+          backgroundRepeat: "no-repeat"
+        }}
+      >
+        {/* Soft fade into content area */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
+      </div>
+
       {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 min-h-screen items-center py-16 md:py-24">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 items-center pb-16 pt-8 md:py-24">
         {/* Left Side — empty, shows background */}
         <div className="hidden md:block" />
 
         {/* Right Side — feedbacks */}
         <div className="flex flex-col h-full justify-center">
           {/* Header */}
-          <div className="mb-8 mt-8 md:mt-0">
+          <div className="mb-8 mt-2 md:mt-0 text-center md:text-left">
             <span className="clay-badge text-sm mb-4 inline-block bg-white shadow-sm border border-gray-100">Feedbacks</span>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mb-2">
               O que dizem sobre <span className="text-primary">mim</span>
@@ -95,7 +107,7 @@ const FeedbacksSection = () => {
           </div>
 
           {/* Feedback Row Layout: image left (half width), details right */}
-          <div className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="flex flex-col gap-4 md:max-h-[70vh] md:overflow-y-auto md:pr-1 md:[&::-webkit-scrollbar]:w-1 md:[&::-webkit-scrollbar-thumb]:bg-gray-200 md:[&::-webkit-scrollbar-thumb]:rounded-full pb-8 md:pb-0">
             {feedbacks.map((feedback, index) => (
               <motion.div
                 key={feedback.file}
