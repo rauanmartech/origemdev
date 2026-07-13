@@ -20,7 +20,7 @@ export function useCreateNote(userId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [NOTES_KEY] });
     },
-    onError: () => toast.error('Erro ao criar anotação'),
+    onError: (err: any) => toast.error(`Erro ao criar anotação: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -32,7 +32,7 @@ export function useUpdateNote() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [NOTES_KEY] });
     },
-    onError: () => toast.error('Erro ao salvar anotação'),
+    onError: (err: any) => toast.error(`Erro ao salvar anotação: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -44,7 +44,7 @@ export function useDeleteNote() {
       qc.invalidateQueries({ queryKey: [NOTES_KEY] });
       toast.success('Anotação removida');
     },
-    onError: () => toast.error('Erro ao remover anotação'),
+    onError: (err: any) => toast.error(`Erro ao remover anotação: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -56,6 +56,6 @@ export function useToggleFavorite() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [NOTES_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar favorito'),
+    onError: (err: any) => toast.error(`Erro ao atualizar favorito: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }

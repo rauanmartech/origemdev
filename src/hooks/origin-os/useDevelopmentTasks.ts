@@ -21,7 +21,7 @@ export function useCreateDevTask(userId: string) {
       qc.invalidateQueries({ queryKey: [DEV_TASKS_KEY] });
       toast.success('Tarefa criada!');
     },
-    onError: () => toast.error('Erro ao criar tarefa'),
+    onError: (err: any) => toast.error(`Erro ao criar tarefa: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -33,7 +33,7 @@ export function useUpdateDevTask() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [DEV_TASKS_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar tarefa'),
+    onError: (err: any) => toast.error(`Erro ao atualizar tarefa: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -45,7 +45,7 @@ export function useDeleteDevTask() {
       qc.invalidateQueries({ queryKey: [DEV_TASKS_KEY] });
       toast.success('Tarefa removida');
     },
-    onError: () => toast.error('Erro ao remover tarefa'),
+    onError: (err: any) => toast.error(`Erro ao remover tarefa: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -60,7 +60,7 @@ export function useReorderDevTasks() {
     onSettled: () => {
       qc.invalidateQueries({ queryKey: [DEV_TASKS_KEY] });
     },
-    onError: () => toast.error('Erro ao reordenar'),
+    onError: (err: any) => toast.error(`Erro ao reordenar: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 

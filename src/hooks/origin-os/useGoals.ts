@@ -29,7 +29,7 @@ export function useCreateGoal(userId: string) {
       qc.invalidateQueries({ queryKey: [GOALS_KEY] });
       toast.success('Meta criada com sucesso!');
     },
-    onError: () => toast.error('Erro ao criar meta'),
+    onError: (err: any) => toast.error(`Erro ao criar meta: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -42,7 +42,7 @@ export function useUpdateGoal() {
       qc.invalidateQueries({ queryKey: [GOALS_KEY] });
       toast.success('Meta atualizada!');
     },
-    onError: () => toast.error('Erro ao atualizar meta'),
+    onError: (err: any) => toast.error(`Erro ao atualizar meta: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -54,6 +54,6 @@ export function useDeleteGoal() {
       qc.invalidateQueries({ queryKey: [GOALS_KEY] });
       toast.success('Meta removida');
     },
-    onError: () => toast.error('Erro ao remover meta'),
+    onError: (err: any) => toast.error(`Erro ao remover meta: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }

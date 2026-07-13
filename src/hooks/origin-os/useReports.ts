@@ -42,7 +42,7 @@ export function useUpsertReport(userId: string) {
       qc.invalidateQueries({ queryKey: [REPORTS_KEY] });
       toast.success('Fechamento do dia salvo! Dashboard atualizado.');
     },
-    onError: () => toast.error('Erro ao salvar fechamento'),
+    onError: (err: any) => toast.error(`Erro ao salvar fechamento: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 

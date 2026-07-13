@@ -21,7 +21,7 @@ export function useCreateFollowup(userId: string) {
       qc.invalidateQueries({ queryKey: [FOLLOWUPS_KEY] });
       toast.success('Follow up criado!');
     },
-    onError: () => toast.error('Erro ao criar follow up'),
+    onError: (err: any) => toast.error(`Erro ao criar follow up: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -33,7 +33,7 @@ export function useUpdateFollowup(userId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [FOLLOWUPS_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar follow up'),
+    onError: (err: any) => toast.error(`Erro ao atualizar follow up: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -45,7 +45,7 @@ export function useDeleteFollowup() {
       qc.invalidateQueries({ queryKey: [FOLLOWUPS_KEY] });
       toast.success('Follow up removido');
     },
-    onError: () => toast.error('Erro ao remover follow up'),
+    onError: (err: any) => toast.error(`Erro ao remover follow up: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 

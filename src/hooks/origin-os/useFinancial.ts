@@ -24,7 +24,7 @@ export function useCreateEntry(userId: string) {
       qc.invalidateQueries({ queryKey: [ENTRIES_KEY] });
       toast.success('Entrada registrada!');
     },
-    onError: () => toast.error('Erro ao registrar entrada'),
+    onError: (err: any) => toast.error(`Erro ao registrar entrada: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -36,7 +36,7 @@ export function useUpdateEntry() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [ENTRIES_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar entrada'),
+    onError: (err: any) => toast.error(`Erro ao atualizar entrada: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -48,7 +48,7 @@ export function useDeleteEntry() {
       qc.invalidateQueries({ queryKey: [ENTRIES_KEY] });
       toast.success('Entrada removida');
     },
-    onError: () => toast.error('Erro ao remover entrada'),
+    onError: (err: any) => toast.error(`Erro ao remover entrada: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -69,7 +69,7 @@ export function useCreateExpense(userId: string) {
       qc.invalidateQueries({ queryKey: [EXPENSES_KEY] });
       toast.success('Saída registrada!');
     },
-    onError: () => toast.error('Erro ao registrar saída'),
+    onError: (err: any) => toast.error(`Erro ao registrar saída: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -81,7 +81,7 @@ export function useUpdateExpense() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [EXPENSES_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar saída'),
+    onError: (err: any) => toast.error(`Erro ao atualizar saída: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -93,7 +93,7 @@ export function useDeleteExpense() {
       qc.invalidateQueries({ queryKey: [EXPENSES_KEY] });
       toast.success('Saída removida');
     },
-    onError: () => toast.error('Erro ao remover saída'),
+    onError: (err: any) => toast.error(`Erro ao remover saída: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -115,7 +115,7 @@ export function useCreateInvestment(userId: string) {
       qc.invalidateQueries({ queryKey: ['os-goals'] });
       toast.success('Investimento registrado! Patrimônio atualizado.');
     },
-    onError: () => toast.error('Erro ao registrar investimento'),
+    onError: (err: any) => toast.error(`Erro ao registrar investimento: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -129,7 +129,7 @@ export function useDeleteInvestment(userId: string) {
       qc.invalidateQueries({ queryKey: ['os-goals'] });
       toast.success('Investimento removido');
     },
-    onError: () => toast.error('Erro ao remover investimento'),
+    onError: (err: any) => toast.error(`Erro ao remover investimento: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 

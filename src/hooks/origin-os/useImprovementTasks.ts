@@ -21,7 +21,7 @@ export function useCreateImprovement(userId: string) {
       qc.invalidateQueries({ queryKey: [IMPROVEMENT_KEY] });
       toast.success('Missão criada!');
     },
-    onError: () => toast.error('Erro ao criar missão'),
+    onError: (err: any) => toast.error(`Erro ao criar missão: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -33,7 +33,7 @@ export function useUpdateImprovement() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [IMPROVEMENT_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar missão'),
+    onError: (err: any) => toast.error(`Erro ao atualizar missão: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -45,7 +45,7 @@ export function useDeleteImprovement() {
       qc.invalidateQueries({ queryKey: [IMPROVEMENT_KEY] });
       toast.success('Missão removida');
     },
-    onError: () => toast.error('Erro ao remover missão'),
+    onError: (err: any) => toast.error(`Erro ao remover missão: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 

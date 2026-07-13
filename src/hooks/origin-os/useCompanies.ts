@@ -32,7 +32,7 @@ export function useCreateCompany(userId: string) {
       qc.invalidateQueries({ queryKey: [COMPANIES_KEY] });
       toast.success('Empresa adicionada!');
     },
-    onError: () => toast.error('Erro ao adicionar empresa'),
+    onError: (err: any) => toast.error(`Erro ao adicionar empresa: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -44,7 +44,7 @@ export function useUpdateCompany() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [COMPANIES_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar empresa'),
+    onError: (err: any) => toast.error(`Erro ao atualizar empresa: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -56,7 +56,7 @@ export function useDeleteCompany() {
       qc.invalidateQueries({ queryKey: [COMPANIES_KEY] });
       toast.success('Empresa removida');
     },
-    onError: () => toast.error('Erro ao remover empresa'),
+    onError: (err: any) => toast.error(`Erro ao remover empresa: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -69,7 +69,7 @@ export function useMarkAsProspected(userId: string) {
       qc.invalidateQueries({ queryKey: ['os-followups'] });
       toast.success('Empresa prospectada! Follow up criado automaticamente.');
     },
-    onError: () => toast.error('Erro ao registrar prospecção'),
+    onError: (err: any) => toast.error(`Erro ao registrar prospecção: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -81,7 +81,7 @@ export function useUpdateCompanyStatus(userId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [COMPANIES_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar status'),
+    onError: (err: any) => toast.error(`Erro ao atualizar status: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -102,6 +102,6 @@ export function useUpsertPriorities(userId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [PRIORITIES_KEY] });
     },
-    onError: () => toast.error('Erro ao salvar prioridades'),
+    onError: (err: any) => toast.error(`Erro ao salvar prioridades: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }

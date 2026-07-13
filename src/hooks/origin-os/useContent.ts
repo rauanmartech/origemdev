@@ -21,7 +21,7 @@ export function useCreateContent(userId: string) {
       qc.invalidateQueries({ queryKey: [CONTENT_KEY] });
       toast.success('Conteúdo criado!');
     },
-    onError: () => toast.error('Erro ao criar conteúdo'),
+    onError: (err: any) => toast.error(`Erro ao criar conteúdo: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -33,7 +33,7 @@ export function useUpdateContent() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [CONTENT_KEY] });
     },
-    onError: () => toast.error('Erro ao atualizar conteúdo'),
+    onError: (err: any) => toast.error(`Erro ao atualizar conteúdo: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -45,7 +45,7 @@ export function useDeleteContent() {
       qc.invalidateQueries({ queryKey: [CONTENT_KEY] });
       toast.success('Conteúdo removido');
     },
-    onError: () => toast.error('Erro ao remover conteúdo'),
+    onError: (err: any) => toast.error(`Erro ao remover conteúdo: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
 
@@ -57,6 +57,6 @@ export function usePublishContent() {
       qc.invalidateQueries({ queryKey: [CONTENT_KEY] });
       toast.success('Conteúdo publicado! 🎉');
     },
-    onError: () => toast.error('Erro ao publicar'),
+    onError: (err: any) => toast.error(`Erro ao publicar: ${err?.message || err || 'Erro desconhecido'}`),
   });
 }
