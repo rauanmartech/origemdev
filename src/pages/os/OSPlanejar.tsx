@@ -5,7 +5,7 @@ import { useAutoSaveDraft } from '@/hooks/useAutoSaveDraft';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Plus, Trash2, Edit2, Check, X, Users, Building2, Target, Loader2, Phone, Instagram, Globe, MapPin, Tag } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Trash2, Edit2, Check, X, Users, Building2, Target, Loader2, Phone, Instagram, Globe, MapPin, Tag } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,7 +13,6 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import type { Company, CreateCompanyPayload } from '@/types/origin-os';
 
-const today = format(new Date(), 'yyyy-MM-dd');
 
 const companySchema = z.object({
   name: z.string().min(1, 'Nome obrigatório'),
@@ -30,12 +29,28 @@ type CompanyForm = z.infer<typeof companySchema>;
 
 const OSPlanejar: React.FC = () => {
   const { userId } = useOSContext();
-  const [editingPriority, setEditingPriority] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
+  const isToday = selectedDate === format(new Date(), 'yyyy-MM-dd');
+
+  const goToPrevDay = () => {
+    const d = new Date(selectedDate + 'T00:00:00');
+    d.setDate(d.getDate() - 1);
+    setSelectedDate(format(d, 'yyyy-MM-dd'));
+  };
+
+  const goToNextDay = () => {
+    const d = new Date(selectedDate + 'T00:00:00');
+    d.setDate(d.getDate() + 1);
+    setSelectedDate(format(d, 'yyyy-MM-dd'));
+  };
+
+  const goToToday = () => setSelectedDate(format(new Date(), 'yyyy-MM-dd'));
+
   const [showCompanyModal, setShowCompanyModal] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
 
-  const { data: priData, isLoading: priLoading } = useDailyPriorities(userId, today);
-  const { data: companies = [], isLoading: compLoading } = useCompaniesToday(userId, today);
+  const { data: priData, isLoading: priLoading } = useDailyPriorities(userId, selectedDate);
+  const { data: companies = [], isLoading: compLoading } = useCompaniesToday(userId, selectedDate);
   const upsertPri = useUpsertPriorities(userId);
   const createCompany = useCreateCompany(userId);
   const updateCompany = useUpdateCompany();
@@ -44,7 +59,7 @@ const OSPlanejar: React.FC = () => {
   const handleAutoSave = async (data: { p1: string; p2: string; p3: string }) => {
     if (!data.p1 && !data.p2 && !data.p3) return;
     await upsertPri.mutateAsync({
-      date: today,
+      date: selectedDate,
       priority_1: data.p1,
       priority_2: data.p2,
       priority_3: data.p3,
@@ -52,7 +67,7 @@ const OSPlanejar: React.FC = () => {
   };
 
   const { data: priorities, setData: setPriorities } = useAutoSaveDraft(
-    `os-draft-priorities-${userId}-${today}`,
+    `os-draft-priorities-${userId}-${selectedDate}`,
     { p1: '', p2: '', p3: '' },
     handleAutoSave,
     1000
@@ -93,7 +108,7 @@ const OSPlanejar: React.FC = () => {
       await updateCompany.mutateAsync({ id: editingCompany.id, payload: data });
       toast.success('Empresa atualizada!');
     } else {
-      await createCompany.mutateAsync({ ...data, plan_date: today, selected_for_today: true } as CreateCompanyPayload);
+      await createCompany.mutateAsync({ ...data, plan_date: selectedDate, selected_for_today: true } as CreateCompanyPayload);
     }
     setShowCompanyModal(false);
   };
@@ -106,12 +121,53 @@ const OSPlanejar: React.FC = () => {
 
   return (
     <div className="p-6 space-y-8 max-w-5xl mx-auto">
-      {/* Header */}
-      <div>
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#555' }}>
-          {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
-        </p>
-        <h1 className="text-2xl font-bold text-white">Planejar</h1>
+      {/* Header with date navigation */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Planejar</h1>
+          <p className="text-xs font-medium mt-0.5" style={{ color: '#555' }}>
+            {format(new Date(selectedDate + 'T00:00:00'), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
+          </p>
+        </div>
+        {/* Date navigation */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={goToPrevDay}
+            className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-white/10"
+            style={{ background: '#1e1e1e', border: '1px solid #2a2a2a', color: '#888' }}
+          >
+            <ChevronLeft size={16} />
+          </button>
+
+          <div className="relative">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={e => e.target.value && setSelectedDate(e.target.value)}
+              className="appearance-none w-36 text-center text-sm font-semibold rounded-xl px-3 py-1.5 outline-none cursor-pointer"
+              style={{ background: '#1e1e1e', border: '1px solid #2a2a2a', color: 'white', colorScheme: 'dark' }}
+            />
+          </div>
+
+          <button
+            onClick={goToNextDay}
+            disabled={isToday}
+            className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-white/10 disabled:opacity-30"
+            style={{ background: '#1e1e1e', border: '1px solid #2a2a2a', color: '#888' }}
+          >
+            <ChevronRight size={16} />
+          </button>
+
+          {!isToday && (
+            <button
+              onClick={goToToday}
+              className="text-xs font-semibold px-3 py-1.5 rounded-xl transition-colors"
+              style={{ background: 'hsl(25 95% 53% / 0.15)', color: 'hsl(25 95% 53%)' }}
+            >
+              Hoje
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Priorities */}

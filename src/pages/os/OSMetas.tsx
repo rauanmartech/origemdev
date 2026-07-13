@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { useOSContext } from './components/OSLayout';
 import { useGoals, useCreateGoal, useUpdateGoal, useDeleteGoal } from '@/hooks/origin-os/useGoals';
-import { Plus, Target, Trash2, Edit2, Loader2, PlayCircle, CheckCircle2, PauseCircle } from 'lucide-react';
+import { useEntries } from '@/hooks/origin-os/useFinancial';
+import { Plus, Target, Trash2, Edit2, Loader2, PlayCircle, CheckCircle2, PauseCircle, TrendingUp, DollarSign } from 'lucide-react';
 import type { Goal, CreateGoalPayload, GoalStatus } from '@/types/origin-os';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import GoalProgressCard from './components/GoalProgressCard';
+import { toast } from 'sonner';
 
 const schema = z.object({
   name: z.string().min(1, 'Obrigatório'),
@@ -20,20 +22,35 @@ const schema = z.object({
 });
 type Form = z.infer<typeof schema>;
 
+const contributionSchema = z.object({
+  amount: z.coerce.number().min(0.01, 'Valor deve ser maior que 0'),
+  note: z.string().optional(),
+});
+type ContributionForm = z.infer<typeof contributionSchema>;
+
 const OSMetas: React.FC = () => {
   const { userId } = useOSContext();
   const { data: goals = [], isLoading } = useGoals(userId);
+  const { data: entries = [] } = useEntries(userId);
   const createGoal = useCreateGoal(userId);
   const updateGoal = useUpdateGoal();
   const deleteGoal = useDeleteGoal();
 
   const [showModal, setShowModal] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [showContributionModal, setShowContributionModal] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<Form>({ resolver: zodResolver(schema) });
+  const { register: regC, handleSubmit: handleC, reset: resetC, formState: { errors: errC } } = useForm<ContributionForm>({
+    resolver: zodResolver(contributionSchema),
+    defaultValues: { amount: 0, note: '' },
+  });
 
   const activeGoal = goals.find(g => g.status === 'active');
   const pastGoals = goals.filter(g => g.status !== 'active');
+
+  // Sum of all financial entries as the current revenue reference
+  const totalEntries = entries.reduce((sum, e) => sum + (e.value ?? 0), 0);
 
   const openCreate = () => {
     setEditingGoal(null);
@@ -65,12 +82,23 @@ const OSMetas: React.FC = () => {
   };
 
   const changeStatus = (id: string, status: GoalStatus) => {
-    // se for ativar e já existir ativa, avise
     if (status === 'active' && activeGoal) {
       alert('Já existe uma meta ativa. Conclua ou pause a atual primeiro.');
       return;
     }
     updateGoal.mutate({ id, payload: { status } });
+  };
+
+  const applyContribution = async (data: ContributionForm) => {
+    if (!activeGoal) return;
+    const newInvested = (activeGoal.invested_value ?? 0) + data.amount;
+    await updateGoal.mutateAsync({
+      id: activeGoal.id,
+      payload: { invested_value: newInvested },
+    });
+    toast.success(`R$ ${data.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} aplicado na meta!`);
+    setShowContributionModal(false);
+    resetC();
   };
 
   if (isLoading) {
@@ -101,11 +129,21 @@ const OSMetas: React.FC = () => {
 
       {/* Active Goal */}
       <section>
-        <h2 className="text-sm font-bold uppercase tracking-widest mb-4" style={{ color: '#555' }}>Meta Ativa</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#555' }}>Meta Ativa</h2>
+          {activeGoal && (
+            <button
+              onClick={() => { resetC({ amount: 0, note: '' }); setShowContributionModal(true); }}
+              className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl transition-all hover:opacity-90"
+              style={{ background: 'rgba(99,102,241,0.15)', color: '#818cf8' }}
+            >
+              <TrendingUp size={13} /> Aplicar Entrada na Meta
+            </button>
+          )}
+        </div>
         {activeGoal ? (
           <div className="relative group">
-            {/* We pass currentRevenue=0 here since we don't have the full dashboard context, but in real use it would fetch current month revenue, or the user can just see it on the Dashboard. For now we just show the card. */}
-            <GoalProgressCard goal={activeGoal} currentRevenue={0} />
+            <GoalProgressCard goal={activeGoal} currentRevenue={totalEntries} />
             <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <button onClick={() => changeStatus(activeGoal.id, 'completed')} className="w-8 h-8 rounded-lg bg-green-500/20 text-green-500 flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors" title="Concluir">
                 <CheckCircle2 size={16} />
@@ -199,6 +237,88 @@ const OSMetas: React.FC = () => {
               <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 rounded-xl text-sm font-medium transition-colors hover:bg-white/5" style={{ color: '#888' }}>Cancelar</button>
               <button type="submit" className="px-5 py-2 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90" style={{ background: 'hsl(25 95% 53%)' }}>
                 {editingGoal ? 'Salvar' : 'Criar Meta'}
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Contribution Modal */}
+      <Dialog open={showContributionModal} onOpenChange={setShowContributionModal}>
+        <DialogContent style={{ background: '#1e1e1e', border: '1px solid #333' }}>
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center gap-2">
+              <TrendingUp size={18} style={{ color: '#818cf8' }} />
+              Aplicar Entrada na Meta
+            </DialogTitle>
+            <DialogDescription style={{ color: '#666' }}>
+              {activeGoal ? (
+                <>Atualize o progresso investido na meta <strong className="text-white">"{activeGoal.name}"</strong>. O valor será somado ao que já foi investido.</>
+              ) : null}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleC(applyContribution)} className="space-y-4 mt-2">
+            {/* Current progress info */}
+            {activeGoal && (
+              <div className="rounded-xl p-3 flex items-center justify-between" style={{ background: '#252525' }}>
+                <div>
+                  <p className="text-xs font-medium" style={{ color: '#666' }}>Já investido</p>
+                  <p className="font-bold text-white">
+                    {(activeGoal.invested_value ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-medium" style={{ color: '#666' }}>Alvo</p>
+                  <p className="font-bold" style={{ color: 'hsl(25 95% 53%)' }}>
+                    {activeGoal.target_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label className="text-xs font-semibold mb-1 block" style={{ color: '#888' }}>Valor a Aplicar (R$) *</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold" style={{ color: '#666' }}>R$</span>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  {...regC('amount')}
+                  className="w-full rounded-xl pl-10 pr-3 py-2 text-sm text-white outline-none"
+                  style={{ background: '#252525', border: '1px solid #333' }}
+                  placeholder="0,00"
+                />
+              </div>
+              {errC.amount && <p className="text-xs text-red-400 mt-1">{errC.amount.message}</p>}
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold mb-1 block" style={{ color: '#888' }}>Observação (opcional)</label>
+              <input
+                {...regC('note')}
+                className="w-full rounded-xl px-3 py-2 text-sm text-white outline-none"
+                style={{ background: '#252525', border: '1px solid #333' }}
+                placeholder="Ex: Pagamento do cliente X…"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowContributionModal(false)}
+                className="px-4 py-2 rounded-xl text-sm font-medium transition-colors hover:bg-white/5"
+                style={{ color: '#888' }}
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}
+              >
+                <DollarSign size={14} /> Aplicar na Meta
               </button>
             </div>
           </form>

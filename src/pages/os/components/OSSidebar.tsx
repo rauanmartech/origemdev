@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
-import logoParceria from '@/assets/icone_parceria.png';
+import logo from '@/assets/logo.png';
 import {
   LayoutDashboard,
   CalendarDays,
@@ -64,9 +64,8 @@ const OSSidebar: React.FC<OSSidebarProps> = ({ open, onClose, userEmail }) => {
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-5 flex-shrink-0" style={{ borderBottom: '1px solid #2a2a2a' }}>
         <div className="flex items-center gap-3">
-          <div className="relative w-9 h-9 flex-shrink-0">
-            <img src={logoParceria} alt="Origem" className="w-full h-full object-contain opacity-80" />
-            <div className="absolute inset-0 bg-[hsl(25,95%,53%)] mix-blend-color pointer-events-none" />
+          <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
+            <img src={logo} alt="Origem" className="w-full h-full object-contain" />
           </div>
           <div>
             <p className="text-white font-bold text-sm leading-tight">ORIGIN OS</p>
