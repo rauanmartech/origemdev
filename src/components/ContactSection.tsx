@@ -143,7 +143,7 @@ const ContactSection = () => {
             </a>
 
             <a
-              href="https://instagram.com/origem.dev"
+              href="https://instagram.com/origemdev"
               target="_blank"
               rel="noopener noreferrer"
               className="block group"
@@ -161,7 +161,7 @@ const ContactSection = () => {
                 </div>
                 <div className="relative z-10">
                   <h4 className="font-display font-semibold text-foreground mb-1">Instagram</h4>
-                  <p className="text-muted-foreground text-sm">@origem.dev</p>
+                  <p className="text-muted-foreground text-sm">@origemdev</p>
                 </div>
               </div>
             </a>
