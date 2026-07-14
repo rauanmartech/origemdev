@@ -98,9 +98,7 @@ function DroppableColumn({ column, children, onAdd, addLabel, isDraggingOver }: 
           items={column.items.map(i => i.id)}
           strategy={verticalListSortingStrategy}
         >
-          <AnimatePresence>
-            {children}
-          </AnimatePresence>
+          {children}
         </SortableContext>
 
         {column.items.length === 0 && (
@@ -136,7 +134,6 @@ export function SortableCard({ id, children }: SortableCardProps) {
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
-    transition,
     opacity: isDragging ? 0.4 : 1,
     cursor: isDragging ? 'grabbing' : 'grab',
   };
@@ -225,17 +222,9 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
             isDraggingOver={overId === col.id || col.items.some(i => i.id === overId && col.id !== (activeColumn?.id))}
           >
             {col.items.map(item => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                layout
-              >
-                <SortableCard id={item.id}>
-                  {renderCard(item, col.id)}
-                </SortableCard>
-              </motion.div>
+              <SortableCard key={item.id} id={item.id}>
+                {renderCard(item, col.id)}
+              </SortableCard>
             ))}
           </DroppableColumn>
         ))}

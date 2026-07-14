@@ -30,7 +30,14 @@ export function useUpdateFollowup(userId: string) {
   return useMutation({
     mutationFn: ({ followup, payload }: { followup: FollowUp; payload: UpdateFollowUpPayload }) =>
       followupsService.update(userId, followup, payload),
-    onSuccess: () => {
+    onMutate: async ({ followup, payload }) => {
+      await qc.cancelQueries({ queryKey: [FOLLOWUPS_KEY] });
+      qc.setQueriesData({ queryKey: [FOLLOWUPS_KEY] }, (old: any) => {
+        if (!old) return old;
+        return old.map((f: FollowUp) => f.id === followup.id ? { ...f, ...payload } : f);
+      });
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: [FOLLOWUPS_KEY] });
     },
     onError: (err: any) => toast.error(`Erro ao atualizar follow up: ${err?.message || err || 'Erro desconhecido'}`),

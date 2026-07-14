@@ -30,7 +30,14 @@ export function useUpdateDevTask() {
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: UpdateDevTaskPayload }) =>
       devTasksService.update(id, payload),
-    onSuccess: () => {
+    onMutate: async ({ id, payload }) => {
+      await qc.cancelQueries({ queryKey: [DEV_TASKS_KEY] });
+      qc.setQueriesData({ queryKey: [DEV_TASKS_KEY] }, (old: any) => {
+        if (!old) return old;
+        return old.map((t: DevelopmentTask) => t.id === id ? { ...t, ...payload } : t);
+      });
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: [DEV_TASKS_KEY] });
     },
     onError: (err: any) => toast.error(`Erro ao atualizar tarefa: ${err?.message || err || 'Erro desconhecido'}`),

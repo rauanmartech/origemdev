@@ -78,7 +78,14 @@ export function useUpdateCompanyStatus(userId: string) {
   return useMutation({
     mutationFn: ({ company, status }: { company: Company; status: Company['prospect_status'] }) =>
       companiesService.updateStatus(userId, company, status),
-    onSuccess: () => {
+    onMutate: async ({ company, status }) => {
+      await qc.cancelQueries({ queryKey: [COMPANIES_KEY] });
+      qc.setQueriesData({ queryKey: [COMPANIES_KEY] }, (old: any) => {
+        if (!old) return old;
+        return old.map((c: Company) => c.id === company.id ? { ...c, prospect_status: status } : c);
+      });
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: [COMPANIES_KEY] });
     },
     onError: (err: any) => toast.error(`Erro ao atualizar status: ${err?.message || err || 'Erro desconhecido'}`),
