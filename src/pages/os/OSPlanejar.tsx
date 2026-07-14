@@ -48,6 +48,7 @@ const OSPlanejar: React.FC = () => {
 
   const [showCompanyModal, setShowCompanyModal] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
+  const [editingPriority, setEditingPriority] = useState<number | null>(null);
 
   const { data: priData, isLoading: priLoading } = useDailyPriorities(userId, selectedDate);
   const { data: companies = [], isLoading: compLoading } = useCompaniesToday(userId, selectedDate);
