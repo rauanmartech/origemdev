@@ -45,7 +45,7 @@ const CompanyCard: React.FC<{ company: Company; onMarkProspected: () => void; on
         </a>
       )}
       {company.whatsapp && (
-        <a href={`https://wa.me/${company.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-green-500/20 transition-colors" style={{ color: '#666' }}>
+        <a href={`https://wa.me/${company.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Oi, tudo bem? Meu nome é Rauan. Encontrei o escritório de vocês pesquisando empresas de ${company.niche || '[nicho]'} aqui na região de ${company.city || '[cidade]'} e queria falar com alguém responsável pelo escritório. Poderia me ajudar?`)}`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-green-500/20 transition-colors" style={{ color: '#666' }}>
           <MessageCircle size={11} />
         </a>
       )}
