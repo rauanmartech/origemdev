@@ -54,7 +54,7 @@ const FollowUpCard: React.FC<{ fu: FollowUp; onDelete: () => void; onOpen: () =>
     <div className="flex items-start justify-between mb-1">
       <p className="text-white font-semibold text-sm truncate flex-1">{fu.company_name}</p>
       <button
-        onMouseDown={e => { e.stopPropagation(); onDelete(); }}
+        onClick={e => { e.stopPropagation(); onDelete(); }}
         className="opacity-0 group-hover:opacity-100 transition-opacity w-5 h-5 rounded flex items-center justify-center hover:bg-red-500/20"
         style={{ color: '#666' }}
       >
@@ -71,8 +71,8 @@ const FollowUpCard: React.FC<{ fu: FollowUp; onDelete: () => void; onOpen: () =>
     </div>
     {fu.notes && <p className="text-[11px] line-clamp-2" style={{ color: '#666' }}>{fu.notes}</p>}
     <div className="flex items-center gap-1.5 mt-2">
-      {fu.phone && <a href={`tel:${fu.phone}`} onMouseDown={e => e.stopPropagation()} className="w-5 h-5 rounded flex items-center justify-center hover:bg-white/10" style={{ color: '#555' }}><Phone size={10} /></a>}
-      {fu.whatsapp && <a href={`https://wa.me/${fu.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" onMouseDown={e => e.stopPropagation()} className="w-5 h-5 rounded flex items-center justify-center hover:bg-green-500/20" style={{ color: '#555' }}><MessageCircle size={10} /></a>}
+      {fu.phone && <a href={`tel:${fu.phone}`} onClick={e => e.stopPropagation()} className="w-5 h-5 rounded flex items-center justify-center hover:bg-white/10" style={{ color: '#555' }}><Phone size={10} /></a>}
+      {fu.whatsapp && <a href={`https://wa.me/${fu.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="w-5 h-5 rounded flex items-center justify-center hover:bg-green-500/20" style={{ color: '#555' }}><MessageCircle size={10} /></a>}
       <span className="text-[10px] ml-auto" style={{ color: '#444' }}>{format(new Date(fu.created_at), 'dd/MM', { locale: ptBR })}</span>
     </div>
   </div>
