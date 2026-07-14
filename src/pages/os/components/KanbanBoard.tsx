@@ -230,7 +230,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
         ))}
       </div>
 
-      <DragOverlay>
+      <DragOverlay dropAnimation={null}>
         {activeId && activeItem && activeColumn ? (
           <div style={{ opacity: 0.9, transform: 'scale(1.03)', cursor: 'grabbing' }}>
             {renderCard(activeItem, activeColumn.id)}
