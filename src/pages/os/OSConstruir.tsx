@@ -4,6 +4,7 @@ import { useImprovementTasks, useCreateImprovement, useUpdateImprovement, useDel
 import { Plus, Trash2, Check, X, ChevronDown, ChevronUp, Loader2, Calendar, Megaphone, Briefcase, Palette, Globe, Settings, Bot, DollarSign, FileText } from 'lucide-react';
 import type { ImprovementTask, ImprovementCategory, ImprovementStatus, CreateImprovementPayload } from '@/types/origin-os';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -46,8 +47,9 @@ const MissionCard: React.FC<{
   task: ImprovementTask;
   onEdit: () => void;
   onDelete: () => void;
+  onStatusChange: (status: ImprovementStatus) => void;
   catColor: string;
-}> = ({ task, onEdit, onDelete, catColor }) => {
+}> = ({ task, onEdit, onDelete, onStatusChange, catColor }) => {
   const [expanded, setExpanded] = useState(false);
   const checklist = useImprovementChecklist();
   const [newItem, setNewItem] = useState('');
@@ -70,17 +72,32 @@ const MissionCard: React.FC<{
             {task.description && <p className="text-xs mt-0.5 line-clamp-1" style={{ color: '#666' }}>{task.description}</p>}
           </div>
           <div className="flex items-center gap-1.5 flex-shrink-0">
-            <select
-              value={task.status}
-              onChange={e => checklist.toggle.mutate({ id: task.id, completed: false })} // placeholder, actual below
-              onClick={e => e.stopPropagation()}
-              className="text-[10px] font-semibold px-2 py-1 rounded-lg outline-none cursor-pointer"
-              style={{ background: `${STATUS_COLORS[task.status]}20`, color: STATUS_COLORS[task.status], border: 'none' }}
-            >
-              {(['pendente', 'em_andamento', 'concluido'] as ImprovementStatus[]).map(s => (
-                <option key={s} value={s}>{STATUS_LABELS[s]}</option>
-              ))}
-            </select>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  onClick={e => e.stopPropagation()}
+                  className="text-[10px] font-semibold px-2.5 py-1 rounded-lg outline-none cursor-pointer flex items-center gap-1 transition-all hover:opacity-80"
+                  style={{ background: `${STATUS_COLORS[task.status]}20`, color: STATUS_COLORS[task.status], border: `1px solid ${STATUS_COLORS[task.status]}40` }}
+                >
+                  {STATUS_LABELS[task.status]}
+                  <ChevronDown size={10} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32 bg-[#1e1e1e] border-[#333]">
+                {(['pendente', 'em_andamento', 'concluido'] as ImprovementStatus[]).map(s => (
+                  <DropdownMenuItem
+                    key={s}
+                    onClick={(e) => { e.stopPropagation(); onStatusChange(s); }}
+                    className="text-xs cursor-pointer focus:bg-[#2a2a2a] focus:text-white"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full" style={{ background: STATUS_COLORS[s] }} />
+                      <span style={{ color: s === task.status ? '#fff' : '#aaa' }}>{STATUS_LABELS[s]}</span>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <button onClick={() => setExpanded(e => !e)} className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors" style={{ color: '#666' }}>
               {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
             </button>
@@ -255,6 +272,7 @@ const OSConstruir: React.FC = () => {
                   catColor={activeCat.color}
                   onEdit={() => {}}
                   onDelete={() => deleteTask.mutate(task.id)}
+                  onStatusChange={(status) => updateTask.mutate({ id: task.id, payload: { status } })}
                 />
               ))}
             </AnimatePresence>
