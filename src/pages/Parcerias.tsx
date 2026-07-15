@@ -94,9 +94,9 @@ export default function Parcerias() {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="mb-8"
+          className="mb-8 flex flex-col items-center md:items-start text-center md:text-left"
         >
-          <div className="clay-badge inline-flex items-center gap-1.5 mb-3">
+          <div className="clay-badge inline-flex items-center justify-center gap-1.5 mb-3">
             <Swords className="w-3.5 h-3.5" />
             Área de Parcerias
           </div>
@@ -112,25 +112,27 @@ export default function Parcerias() {
         </motion.div>
 
         {/* ── Tab Nav ── */}
-        <div className="clay-card p-1.5 inline-flex gap-1 mb-8 flex-wrap">
-          {TABS.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold transition-all duration-300 cursor-pointer ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-[var(--clay-shadow-primary)]"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {tab.label}
-              </button>
-            );
-          })}
+        <div className="flex justify-center md:justify-start mb-8">
+          <div className="clay-card p-1.5 flex flex-col sm:flex-row flex-wrap md:inline-flex justify-center gap-1 w-full sm:w-auto">
+            {TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={`flex justify-center items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold transition-all duration-300 cursor-pointer ${
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-[var(--clay-shadow-primary)]"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* ── Tab Content ── */}
