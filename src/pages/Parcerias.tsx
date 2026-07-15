@@ -5,10 +5,14 @@ import {
   ArrowLeft,
   Swords,
   Handshake,
+  BookOpen,
+  BookText,
 } from "lucide-react";
 import logo from "../assets/logo.png";
 import KitDeGuerra from "./parcerias/KitDeGuerra";
 import PropostaParceria from "./parcerias/PropostaParceria";
+import BibliotecaObjecoes from "./parcerias/BibliotecaObjecoes";
+import PlaybookComercial from "./parcerias/PlaybookComercial";
 
 // ─── Tab Registry ─────────────────────────────────────────────────────────────
 // Add future tabs here — no other changes needed in the layout.
@@ -25,6 +29,18 @@ const TABS = [
     label: "Proposta de Parceria",
     icon: Handshake,
     component: PropostaParceria,
+  },
+  {
+    id: "objecoes",
+    label: "Biblioteca de Objeções",
+    icon: BookOpen,
+    component: BibliotecaObjecoes,
+  },
+  {
+    id: "playbook",
+    label: "Playbook Comercial",
+    icon: BookText,
+    component: PlaybookComercial,
   },
 ] as const;
 
