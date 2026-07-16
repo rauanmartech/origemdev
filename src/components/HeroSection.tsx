@@ -159,33 +159,33 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
           >
-            {/* Primary button */}
-            <a
-              href="#projetos"
+            {/* Primary button - Solicitar Orçamento (escuro) */}
+            <Link
+              to="/orcamentos"
               className="group flex items-center justify-between gap-4 md:gap-8 rounded-full bg-[#181c20] text-white p-1.5 pl-6 md:pl-8 active:scale-95 transition-transform"
               style={{
                 boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)"
               }}
             >
-              <span className="uppercase text-xs md:text-sm font-bold tracking-wider pt-0.5">Ver Projetos</span>
+              <span className="uppercase text-xs md:text-sm font-bold tracking-wider pt-0.5">Solicitar Orçamento</span>
               <div className="rounded-full flex items-center justify-center w-10 h-10 md:w-11 md:h-11 shrink-0" style={{ background: "hsl(25, 95%, 53%)" }}>
                 <ArrowUpRight className="w-5 h-5 text-white transition-transform duration-300 group-hover:rotate-45" strokeWidth={2.5} />
               </div>
-            </a>
+            </Link>
 
-            {/* Secondary button */}
-            <Link
-              to="/orcamentos"
+            {/* Secondary button - Ver Projetos (branco) */}
+            <a
+              href="#projetos"
               className="group flex items-center justify-between gap-4 md:gap-8 rounded-full bg-white text-gray-800 p-1.5 pl-6 md:pl-8 active:scale-95 transition-all shadow-md hover:shadow-lg"
               style={{
                 border: "1px solid rgba(0,0,0,0.05)"
               }}
             >
-              <span className="uppercase text-xs md:text-sm font-bold tracking-wider pt-0.5">Criar Site Profissional</span>
+              <span className="uppercase text-xs md:text-sm font-bold tracking-wider pt-0.5">Ver Projetos</span>
               <div className="rounded-full flex items-center justify-center w-10 h-10 md:w-11 md:h-11 shrink-0 shadow-sm" style={{ background: "hsl(25, 95%, 53%)" }}>
                 <ArrowUpRight className="w-5 h-5 text-white transition-transform duration-300 group-hover:rotate-45" strokeWidth={2.5} />
               </div>
-            </Link>
+            </a>
           </motion.div>
 
           {/* Mobile Features Card */}

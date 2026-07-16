@@ -18,6 +18,8 @@ import {
 import { useState, useRef, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import orcamentosBg from "@/assets/orcamentos-background.webp";
+import iconeParceria from "@/assets/icone_parceria.png";
 
 const services = [
     {
@@ -314,15 +316,57 @@ const Orcamentos = () => {
         <div className="min-h-screen bg-background overflow-x-hidden relative">
             <Navbar />
 
+            {/* Background Image Hero */}
+            <div className="relative w-full h-[50vh] md:h-[60vh] z-10 bg-background">
+                <img 
+                    src={orcamentosBg} 
+                    alt="Orçamentos Background" 
+                    className="w-full h-full object-cover"
+                />
+            </div>
+
+            {/* Marquee Banner */}
+            <div className="w-full bg-orange-500 overflow-hidden py-1.5 md:py-2 relative z-20 shadow-md">
+                <style>
+                    {`
+                        @keyframes marquee-scroll {
+                            0% { transform: translateX(0); }
+                            100% { transform: translateX(-50%); }
+                        }
+                        .animate-marquee-scroll {
+                            animation: marquee-scroll 40s linear infinite;
+                        }
+                    `}
+                </style>
+                <div className="flex whitespace-nowrap animate-marquee-scroll w-max">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="flex items-center">
+                            {["OS MELHORES PREÇOS", "AS MELHORES CONDIÇÕES", "RESULTADOS REAIS", "QUALIDADE PREMIUM"].map((phrase, idx) => (
+                                <div key={`${i}-${idx}`} className="flex items-center">
+                                    <span className="text-white font-bold text-[10px] md:text-xs tracking-[0.2em] mx-4 md:mx-8">
+                                        {phrase}
+                                    </span>
+                                    <img 
+                                        src={iconeParceria} 
+                                        alt="Origem" 
+                                        className="w-3 h-3 md:w-4 md:h-4 object-contain brightness-0 invert mx-2" 
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </div>
+
             {/* Background Blobs */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <motion.div style={{ y: y1 }} className="clay-blob w-[500px] h-[500px] top-[10%] -left-[10%] animate-float-slow opacity-60" />
                 <motion.div style={{ y: y2 }} className="clay-blob w-[400px] h-[400px] top-[40%] -right-[5%] animate-float-medium opacity-40 hidden md:block" />
             </div>
 
-            <main className="relative z-10 pt-24 md:pt-32 pb-24 px-4">
+            <main className="relative z-10 pt-16 md:pt-24 pb-24 px-4">
                 {/* Header */}
-                <div className="max-w-4xl mx-auto text-center mb-12 md:mb-20">
+                <div className="max-w-4xl mx-auto text-center mb-12 md:mb-20 relative z-20">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
