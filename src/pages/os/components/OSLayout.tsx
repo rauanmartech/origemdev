@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { Loader2 } from 'lucide-react';
 import OSSidebar from './OSSidebar';
+import logo from '@/assets/icone_parceria.png';
 
 interface OSContextType {
   userId: string;
@@ -46,8 +47,12 @@ const OSLayout: React.FC = () => {
     return (
       <div className="h-screen w-screen flex items-center justify-center" style={{ background: '#0D0D0D' }}>
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'hsl(25 95% 53%)' }}>
-            <span className="text-white font-bold text-lg">OS</span>
+          <div className="w-16 h-16 flex items-center justify-center mb-2">
+            <div className="w-full h-full" style={{
+              backgroundColor: 'hsl(25 95% 53%)',
+              WebkitMask: `url(${logo}) no-repeat center / contain`,
+              mask: `url(${logo}) no-repeat center / contain`
+            }} />
           </div>
           <Loader2 className="animate-spin text-orange-500" size={24} />
         </div>
@@ -93,8 +98,12 @@ const OSLayout: React.FC = () => {
               </svg>
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ background: 'hsl(25 95% 53%)' }}>
-                OS
+              <div className="w-7 h-7 flex items-center justify-center">
+                <div className="w-full h-full" style={{
+                  backgroundColor: 'hsl(25 95% 53%)',
+                  WebkitMask: `url(${logo}) no-repeat center / contain`,
+                  mask: `url(${logo}) no-repeat center / contain`
+                }} />
               </div>
               <span className="text-white font-semibold text-sm">ORIGIN OS</span>
             </div>

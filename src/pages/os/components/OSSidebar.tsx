@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/icone_parceria.png';
 import {
   LayoutDashboard,
   CalendarDays,
@@ -18,6 +18,7 @@ import {
   LogOut,
   X,
   ChevronRight,
+  Settings,
 } from 'lucide-react';
 
 interface OSSidebarProps {
@@ -65,7 +66,11 @@ const OSSidebar: React.FC<OSSidebarProps> = ({ open, onClose, userEmail }) => {
       <div className="flex items-center justify-between px-5 py-5 flex-shrink-0" style={{ borderBottom: '1px solid #2a2a2a' }}>
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center">
-            <img src={logo} alt="Origem" className="w-full h-full object-contain" />
+            <div className="w-full h-full" style={{
+              backgroundColor: 'hsl(25 95% 53%)',
+              WebkitMask: `url(${logo}) no-repeat center / contain`,
+              mask: `url(${logo}) no-repeat center / contain`
+            }} />
           </div>
           <div>
             <p className="text-white font-bold text-sm leading-tight">ORIGIN OS</p>
@@ -130,6 +135,13 @@ const OSSidebar: React.FC<OSSidebarProps> = ({ open, onClose, userEmail }) => {
           <p className="text-white text-xs font-semibold truncate">{userEmail}</p>
           <p className="text-[10px] mt-0.5" style={{ color: '#555' }}>Administrador</p>
         </div>
+        <button
+          onClick={() => navigate('/admin')}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:text-white hover:bg-white/5 transition-all duration-200 mb-1"
+        >
+          <Settings size={15} />
+          <span>Admin Area</span>
+        </button>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"

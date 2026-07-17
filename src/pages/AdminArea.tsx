@@ -421,10 +421,17 @@ const AdminArea = () => {
           ))}
         </div>
 
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border flex flex-col gap-2">
+          <button 
+            onClick={() => navigate("/os/dashboard")}
+            className="w-full flex items-center justify-center gap-3 p-3 rounded-xl font-bold transition-all text-sm shadow-md"
+            style={{ backgroundColor: 'hsl(25 95% 53%)', color: 'white' }}
+          >
+            Acessar Origin OS
+          </button>
           <button 
             onClick={() => navigate("/")}
-            className="w-full flex items-center gap-3 p-3 rounded-xl text-muted-foreground hover:bg-muted transition-colors text-sm font-medium"
+            className="w-full flex items-center justify-center gap-3 p-3 rounded-xl text-muted-foreground hover:bg-muted transition-colors text-sm font-medium"
           >
             <LogOut size={16} /> Voltar ao site
           </button>

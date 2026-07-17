@@ -1,58 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { useOSContext } from './components/OSLayout';
-import { useTodayReport, useUpsertReport } from '@/hooks/origin-os/useReports';
+import { useReportByDate, useUpsertReport } from '@/hooks/origin-os/useReports';
 import { useCompaniesToday } from '@/hooks/origin-os/useCompanies';
 import { useFollowups } from '@/hooks/origin-os/useFollowups';
-import { CheckSquare, Save, Loader2 } from 'lucide-react';
+import { CheckSquare, Save, Loader2, Calendar } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-const today = format(new Date(), 'yyyy-MM-dd');
-
 const OSFechamento: React.FC = () => {
   const { userId } = useOSContext();
-  const { data: report, isLoading: loadR } = useTodayReport(userId);
-  const { data: companies = [], isLoading: loadC } = useCompaniesToday(userId, today);
+  const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+
+  const { data: report, isLoading: loadR } = useReportByDate(userId, selectedDate);
+  const { data: companies = [], isLoading: loadC } = useCompaniesToday(userId, selectedDate);
   const { data: followups = [], isLoading: loadF } = useFollowups(userId);
   const upsertReport = useUpsertReport(userId);
 
   const { register, handleSubmit, reset } = useForm();
-  const [isAutoFilled, setIsAutoFilled] = useState(false);
+  const [loadedDate, setLoadedDate] = useState<string | null>(null);
 
-  // Auto-calculate defaults from today's activity
+  // Auto-calculate defaults from selected date's activity
   useEffect(() => {
     if (loadR || loadC || loadF) return;
 
-    if (report && !isAutoFilled) {
-      reset({
-        prospections: report.prospections,
-        responses: report.responses,
-        meetings: report.meetings,
-        proposals: report.proposals,
-        revenue: report.revenue,
-        invested: report.invested,
-        notes: report.notes ?? '',
-      });
-      setIsAutoFilled(true);
-    } else if (!report && !isAutoFilled) {
-      const prospected = companies.filter(c => c.prospect_status === 'prospectado').length;
-      reset({
-        prospections: prospected,
-        responses: 0,
-        meetings: 0,
-        proposals: 0,
-        revenue: 0,
-        invested: 0,
-        notes: '',
-      });
-      setIsAutoFilled(true);
+    if (loadedDate !== selectedDate) {
+      if (report) {
+        reset({
+          prospections: report.prospections,
+          responses: report.responses,
+          meetings: report.meetings,
+          proposals: report.proposals,
+          revenue: report.revenue,
+          invested: report.invested,
+          notes: report.notes ?? '',
+        });
+      } else {
+        const prospected = companies.filter(c => c.prospect_status === 'prospectado').length;
+        reset({
+          prospections: prospected,
+          responses: 0,
+          meetings: 0,
+          proposals: 0,
+          revenue: 0,
+          invested: 0,
+          notes: '',
+        });
+      }
+      setLoadedDate(selectedDate);
     }
-  }, [report, companies, followups, loadR, loadC, loadF, reset, isAutoFilled]);
+  }, [report, companies, followups, loadR, loadC, loadF, reset, selectedDate, loadedDate]);
 
   const onSubmit = async (data: any) => {
     await upsertReport.mutateAsync({
-      date: today,
+      date: selectedDate,
       prospections: Number(data.prospections),
       responses: Number(data.responses),
       meetings: Number(data.meetings),
@@ -62,6 +63,8 @@ const OSFechamento: React.FC = () => {
       notes: data.notes,
     });
   };
+
+  const dateInputRef = React.useRef<HTMLInputElement>(null);
 
   if (loadR || loadC || loadF) {
     return (
@@ -73,14 +76,40 @@ const OSFechamento: React.FC = () => {
 
   return (
     <div className="p-6 max-w-3xl mx-auto flex flex-col h-full">
-      <div className="mb-6 flex-shrink-0">
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#555' }}>
-          {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
-        </p>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <CheckSquare className="text-green-500" /> Fechamento do Dia
-        </h1>
-        <p className="text-sm mt-1" style={{ color: '#666' }}>Registre os números finais do seu dia para alimentar o Dashboard.</p>
+      <div className="mb-6 flex-shrink-0 flex items-center justify-between">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#555' }}>
+            {format(new Date(`${selectedDate}T12:00:00`), "EEEE, d 'de' MMMM", { locale: ptBR })}
+          </p>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+            <CheckSquare className="text-green-500" /> Fechamento do Dia
+          </h1>
+          <p className="text-sm mt-1" style={{ color: '#666' }}>Registre os números finais do seu dia para alimentar o Dashboard.</p>
+        </div>
+        <div 
+          className="flex items-center gap-2 bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl px-4 py-2 cursor-pointer transition-colors hover:border-[#444]"
+          onClick={() => dateInputRef.current?.showPicker()}
+        >
+          <Calendar size={18} style={{ color: 'hsl(25 95% 53%)' }} />
+          <input 
+            ref={dateInputRef}
+            type="date" 
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="bg-transparent text-white font-semibold outline-none w-32 cursor-pointer"
+            style={{ colorScheme: 'dark' }}
+          />
+          <style>{`
+            input[type="date"]::-webkit-calendar-picker-indicator {
+              cursor: pointer;
+              filter: invert(0.6) sepia(1) saturate(5) hue-rotate(360deg);
+              opacity: 0.8;
+            }
+            input[type="date"]::-webkit-calendar-picker-indicator:hover {
+              opacity: 1;
+            }
+          `}</style>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto">

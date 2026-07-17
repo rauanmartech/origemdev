@@ -23,6 +23,14 @@ export function useTodayReport(userId: string) {
   });
 }
 
+export function useReportByDate(userId: string, date: string) {
+  return useQuery({
+    queryKey: [REPORTS_KEY, 'date', userId, date],
+    queryFn: () => reportsService.getByDate(userId, date),
+    enabled: !!userId && !!date,
+  });
+}
+
 export function useMonthSummary(userId: string, year?: number, month?: number) {
   const now = new Date();
   const y = year ?? now.getFullYear();
