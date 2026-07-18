@@ -1,4 +1,4 @@
-import { Brush, Shirt, Shield, Newspaper, Palette, LucideIcon } from "lucide-react";
+import { Brush, Shirt, Shield, Newspaper, Palette, LucideIcon, Stethoscope } from "lucide-react";
 import alvaroHomeImg from "../assets/assets-de-projeto/alvaro-assets/home.webp";
 import alvaroSobreImg from "../assets/assets-de-projeto/alvaro-assets/sobre.webp";
 import alvaroTattooImg from "../assets/assets-de-projeto/alvaro-assets/tattoo.webp";
@@ -16,6 +16,7 @@ import nerinePortfolioImg from "../assets/assets-de-projeto/nerine/portfiolio.we
 import nerineClubCartasImg from "../assets/assets-de-projeto/nerine/clube-de-cartas.webp";
 import pingadoInicioImg from "../assets/assets-de-projeto/pingado-tattoo/inicio.webp";
 import pingadoGaleriaImg from "../assets/assets-de-projeto/pingado-tattoo/galeria-de-tattoos.webp";
+import marcoAntonioImg from "../assets/assets-de-projeto/marco-antonio/marco-antonio.png";
 
 export interface ProjectPreview {
   title: string;
@@ -189,6 +190,29 @@ export const projectsData: Project[] = [
     previews: [
       { title: "Início", image: pingadoInicioImg },
       { title: "Galeria de Tattoos", image: pingadoGaleriaImg }
+    ]
+  },
+  {
+    id: "clinica-dr-marco-antonio",
+    title: "Clínica Veterinária Dr. Marco Antônio",
+    description: "Desenvolvimento de uma landing page para a Clínica Veterinária Dr. Marco Antônio, projetada para transformar visitantes em pacientes por meio de uma experiência simples, objetiva e focada em conversão.",
+    fullDescription: [
+      "Desenvolvimento de uma landing page para a Clínica Veterinária Dr. Marco Antônio, projetada para transformar visitantes em pacientes por meio de uma experiência simples, objetiva e focada em conversão. O projeto combina uma identidade visual acolhedora com uma navegação intuitiva, transmitindo confiança aos tutores desde o primeiro contato.",
+      "O principal diferencial da plataforma é o sistema de agendamento integrado, que permite o envio automático das solicitações de consulta por meio de formulários inteligentes. Todas as informações são armazenadas em banco de dados, facilitando a organização dos atendimentos e agilizando o processo de contato com os clientes.",
+      "O resultado é uma plataforma que fortalece a presença digital da clínica e simplifica o processo de agendamento, proporcionando mais praticidade para os tutores e maior eficiência no atendimento da equipe veterinária."
+    ],
+    tech: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS"],
+    features: [
+      "Landing page desenvolvida com foco em conversão.",
+      "Design exclusivo alinhado à identidade da clínica.",
+      "Sistema de agendamento integrado.",
+      "Formulários inteligentes com armazenamento em banco de dados.",
+      "Interface responsiva e otimizada para dispositivos móveis.",
+      "Arquitetura moderna utilizando Next.js, TypeScript, Supabase e Tailwind CSS."
+    ],
+    icon: Stethoscope,
+    previews: [
+      { title: "Landing Page", image: marcoAntonioImg }
     ]
   },
 ];
