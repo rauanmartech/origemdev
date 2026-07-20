@@ -422,13 +422,23 @@ const AdminArea = () => {
         </div>
 
         <div className="p-4 border-t border-border flex flex-col gap-2">
-          <button 
-            onClick={() => navigate("/os/dashboard")}
-            className="w-full flex items-center justify-center gap-3 p-3 rounded-xl font-bold transition-all text-sm shadow-md"
-            style={{ backgroundColor: 'hsl(25 95% 53%)', color: 'white' }}
-          >
-            Acessar Origin OS
-          </button>
+          <div className="grid grid-cols-2 gap-2">
+            <button 
+              onClick={() => navigate("/os/dashboard")}
+              className="flex items-center justify-center gap-2 p-3 rounded-xl font-bold transition-all text-sm shadow-md hover:opacity-90"
+              style={{ backgroundColor: 'hsl(25 95% 53%)', color: 'white' }}
+              title="Acessar Origin OS"
+            >
+              <Briefcase size={18} /> OS
+            </button>
+            <button 
+              onClick={() => navigate("/parcerias")}
+              className="flex items-center justify-center gap-2 p-3 rounded-xl font-bold transition-all text-sm shadow-md hover:opacity-90 bg-primary text-white"
+              title="Acessar Parcerias"
+            >
+              <Users size={18} /> Parcerias
+            </button>
+          </div>
           <button 
             onClick={() => navigate("/")}
             className="w-full flex items-center justify-center gap-3 p-3 rounded-xl text-muted-foreground hover:bg-muted transition-colors text-sm font-medium"
