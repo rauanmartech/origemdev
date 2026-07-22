@@ -217,9 +217,9 @@ const OSProduzir: React.FC = () => {
           {syncedDetail && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-white flex items-center justify-between">
+                <DialogTitle className="text-white flex items-center justify-between pr-8">
                   <span className="truncate">{syncedDetail.project}</span>
-                  <button onClick={() => { deleteTask.mutate(syncedDetail.id); setDetailTask(null); }} className="flex-shrink-0 ml-3 text-red-500 hover:text-red-400 transition-colors">
+                  <button onClick={() => { deleteTask.mutate(syncedDetail.id); setDetailTask(null); }} className="flex-shrink-0 ml-3 text-red-500 hover:bg-red-500/10 p-1.5 rounded-md transition-colors" title="Excluir tarefa">
                     <Trash2 size={15} />
                   </button>
                 </DialogTitle>
