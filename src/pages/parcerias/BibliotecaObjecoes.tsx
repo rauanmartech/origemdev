@@ -99,6 +99,12 @@ const objecoes = [
     title: "13. Última tentativa (Encerramento)",
     resposta: "Oi! Prometo que essa é minha última mensagem. 😅\n\nEntrei em contato porque realmente identifiquei algumas oportunidades na presença digital do escritório que acredito que podem ajudar na geração de novos clientes.\n\nSe esse não for um momento para vocês, sem problemas. Mas caso tenha interesse em ver uma análise rápida, é só me responder com um 'pode enviar' que compartilho sem compromisso.",
   },
+  {
+    id: "14",
+    title: "14. Enviou os projetos e não teve retorno",
+    observacao: "Mandei os projetos mas ela não respondeu ou não deu retorno.",
+    resposta: "Oi! Tudo bem? 😊\n\nLembrei da nossa conversa e fiquei curioso para saber se você conseguiu dar uma olhada nos projetos que te enviei.\n\nSe tiver visto, queria muito saber o que você achou. Se surgir qualquer dúvida ou ideia, pode me chamar sem cerimônia.",
+  },
 ];
 
 export default function BibliotecaObjecoes() {
