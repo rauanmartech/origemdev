@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useOSContext } from './components/OSLayout';
 import { useFollowups, useCreateFollowup, useUpdateFollowup, useDeleteFollowup, useReorderFollowups } from '@/hooks/origin-os/useFollowups';
 import KanbanBoard, { KanbanColumnDef, KanbanItem } from './components/KanbanBoard';
-import { Plus, Trash2, Phone, MessageCircle, Tag, History, X, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Phone, MessageCircle, Tag, History, X, Loader2, Copy } from 'lucide-react';
 import type { FollowUp, FollowUpStatus, CreateFollowUpPayload } from '@/types/origin-os';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
@@ -207,8 +207,8 @@ const OSFollowUp: React.FC = () => {
               <div className="grid grid-cols-2 gap-3">
                 {detailFU.responsible && <div><p className="text-[10px] uppercase tracking-wider" style={{ color: '#555' }}>Responsável</p><p className="text-sm text-white">{detailFU.responsible}</p></div>}
                 {detailFU.niche && <div><p className="text-[10px] uppercase tracking-wider" style={{ color: '#555' }}>Nicho</p><p className="text-sm text-white">{detailFU.niche}</p></div>}
-                {detailFU.phone && <div><p className="text-[10px] uppercase tracking-wider" style={{ color: '#555' }}>Telefone</p><a href={`tel:${detailFU.phone}`} className="text-sm" style={{ color: 'hsl(25 95% 53%)' }}>{detailFU.phone}</a></div>}
-                {detailFU.whatsapp && <div><p className="text-[10px] uppercase tracking-wider" style={{ color: '#555' }}>Whatsapp</p><a href={`https://wa.me/${detailFU.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" className="text-sm" style={{ color: '#22c55e' }}>{detailFU.whatsapp}</a></div>}
+                {detailFU.phone && <div><p className="text-[10px] uppercase tracking-wider" style={{ color: '#555' }}>Telefone</p><div className="flex items-center gap-2"><a href={`tel:${detailFU.phone}`} className="text-sm" style={{ color: 'hsl(25 95% 53%)' }}>{detailFU.phone}</a><button onClick={() => navigator.clipboard.writeText(detailFU.phone!)} className="opacity-50 hover:opacity-100 transition-opacity"><Copy size={12} /></button></div></div>}
+                {detailFU.whatsapp && <div><p className="text-[10px] uppercase tracking-wider" style={{ color: '#555' }}>Whatsapp</p><div className="flex items-center gap-2"><a href={`https://wa.me/${detailFU.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" className="text-sm" style={{ color: '#22c55e' }}>{detailFU.whatsapp}</a><button onClick={() => navigator.clipboard.writeText(detailFU.whatsapp!)} className="opacity-50 hover:opacity-100 transition-opacity"><Copy size={12} /></button></div></div>}
               </div>
               {detailFU.notes && <div><p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#555' }}>Observações</p><p className="text-sm" style={{ color: '#888' }}>{detailFU.notes}</p></div>}
               

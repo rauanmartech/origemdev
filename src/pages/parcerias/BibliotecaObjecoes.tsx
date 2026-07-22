@@ -94,6 +94,11 @@ const objecoes = [
     observacao: "Enviar os projetos e depois perguntar:",
     resposta: "Aproveitando, hoje vocês já possuem um site ou a presença digital fica mais concentrada no Instagram, Google e indicações?",
   },
+  {
+    id: "13",
+    title: "13. Última tentativa (Encerramento)",
+    resposta: "Oi! Prometo que essa é minha última mensagem. 😅\n\nEntrei em contato porque realmente identifiquei algumas oportunidades na presença digital do escritório que acredito que podem ajudar na geração de novos clientes.\n\nSe esse não for um momento para vocês, sem problemas. Mas caso tenha interesse em ver uma análise rápida, é só me responder com um 'pode enviar' que compartilho sem compromisso.",
+  },
 ];
 
 export default function BibliotecaObjecoes() {
@@ -185,7 +190,7 @@ export default function BibliotecaObjecoes() {
             )}
 
             <div className="relative mt-4">
-              <div className="bg-background/80 rounded-xl p-4 pr-12 text-sm text-foreground border border-border/50">
+              <div className="bg-background/80 rounded-xl p-4 pr-12 text-sm text-foreground border border-border/50 whitespace-pre-wrap">
                 {item.resposta}
               </div>
               <button
