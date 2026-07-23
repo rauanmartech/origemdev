@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { projectsData } from "../data/projectsData";
 import { InteractivePreview } from "../components/InteractivePreview";
+import { MobilePreviews } from "../components/MobilePreviews";
 
 const ProjectDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -125,12 +126,18 @@ const ProjectDetails = () => {
 
           {project.previews && project.previews.length > 0 && (
             <div className="mt-16 space-y-12">
-              <h2 className="font-display text-3xl font-bold text-foreground mb-8">
-                Previews da Página
-              </h2>
-              {project.previews.map((preview, index) => (
-                <InteractivePreview key={index} title={preview.title} src={preview.image} />
-              ))}
+              {project.isMobile ? (
+                <MobilePreviews previews={project.previews} />
+              ) : (
+                <>
+                  <h2 className="font-display text-3xl font-bold text-foreground mb-8">
+                    Previews da Página
+                  </h2>
+                  {project.previews.map((preview, index) => (
+                    <InteractivePreview key={index} title={preview.title} src={preview.image} />
+                  ))}
+                </>
+              )}
             </div>
           )}
 

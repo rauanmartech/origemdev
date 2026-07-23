@@ -1,4 +1,4 @@
-import { Brush, Shirt, Shield, Newspaper, Palette, LucideIcon, Stethoscope } from "lucide-react";
+import { Brush, Shirt, Shield, Newspaper, Palette, LucideIcon, Stethoscope, Smartphone } from "lucide-react";
 import alvaroHomeImg from "../assets/assets-de-projeto/alvaro-assets/home.webp";
 import alvaroSobreImg from "../assets/assets-de-projeto/alvaro-assets/sobre.webp";
 import alvaroTattooImg from "../assets/assets-de-projeto/alvaro-assets/tattoo.webp";
@@ -17,6 +17,12 @@ import nerineClubCartasImg from "../assets/assets-de-projeto/nerine/clube-de-car
 import pingadoInicioImg from "../assets/assets-de-projeto/pingado-tattoo/inicio.webp";
 import pingadoGaleriaImg from "../assets/assets-de-projeto/pingado-tattoo/galeria-de-tattoos.webp";
 import marcoAntonioImg from "../assets/assets-de-projeto/marco-antonio/marco-antonio.png";
+import corpusInicioImg from "../assets/assets-de-projeto/corpus-prime/inicio.png";
+import corpusPerfilImg from "../assets/assets-de-projeto/corpus-prime/perfil.png";
+import corpusTreinoImg from "../assets/assets-de-projeto/corpus-prime/treino.png";
+import corpusEvolucaoImg from "../assets/assets-de-projeto/corpus-prime/evolucao.png";
+import corpusSocialImg from "../assets/assets-de-projeto/corpus-prime/social.png";
+import corpusConquistasImg from "../assets/assets-de-projeto/corpus-prime/conquistas.png";
 
 export interface ProjectPreview {
   title: string;
@@ -35,6 +41,7 @@ export interface Project {
   video?: string;
   link?: string;
   previews?: ProjectPreview[];
+  isMobile?: boolean;
 }
 
 export const projectsData: Project[] = [
@@ -213,6 +220,38 @@ export const projectsData: Project[] = [
     icon: Stethoscope,
     previews: [
       { title: "Landing Page", image: marcoAntonioImg }
+    ]
+  },
+  {
+    id: "corpus-prime",
+    title: "Corpus Prime",
+    description: "Desenvolvimento de um aplicativo completo para a Corpus Prime, projetado para transformar a experiência dos alunos dentro e fora da academia.",
+    fullDescription: [
+      "Desenvolvimento de um aplicativo completo para a Corpus Prime, projetado para transformar a experiência dos alunos dentro e fora da academia. A plataforma centraliza todas as informações do usuário em um ambiente moderno, intuitivo e totalmente integrado, incentivando a consistência nos treinos por meio de recursos de acompanhamento, gamificação e interação social.",
+      "O aplicativo oferece uma dashboard personalizada, gerenciamento de fichas de treino, registro de cargas e repetições, gráficos de evolução, sistema de conquistas, ranking entre alunos, comunidade para compartilhamento de resultados e um perfil completo com acompanhamento de métricas físicas. Todos os dados são armazenados em banco de dados e vinculados individualmente a cada usuário, garantindo uma experiência personalizada e segura.",
+      "O resultado é um aplicativo completo para academias, que une tecnologia, motivação e acompanhamento de desempenho em uma única plataforma, proporcionando aos alunos uma experiência muito além da ficha de treino tradicional."
+    ],
+    tech: ["React Native", "TypeScript", "Supabase", "Expo"],
+    features: [
+      "Dashboard personalizada com visão geral da evolução do aluno.",
+      "Criação e gerenciamento de fichas de treino.",
+      "Registro de séries, repetições, cargas e histórico de exercícios.",
+      "Sistema de conquistas, experiência e ranking (gamificação).",
+      "Comunidade integrada para publicações e interação entre alunos.",
+      "Gráficos de evolução física e progressão de cargas.",
+      "Perfil com acompanhamento de peso, massa magra e métricas corporais.",
+      "Banco de dados estruturado com informações separadas por usuário.",
+      "Arquitetura moderna utilizando React Native, TypeScript, Supabase e Expo."
+    ],
+    icon: Smartphone,
+    isMobile: true,
+    previews: [
+      { title: "Início", image: corpusInicioImg },
+      { title: "Perfil", image: corpusPerfilImg },
+      { title: "Treino", image: corpusTreinoImg },
+      { title: "Evolução", image: corpusEvolucaoImg },
+      { title: "Social", image: corpusSocialImg },
+      { title: "Conquistas", image: corpusConquistasImg }
     ]
   },
 ];
