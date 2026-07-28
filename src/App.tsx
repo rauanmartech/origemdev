@@ -19,6 +19,7 @@ const BriefingBoyczuk = lazy(() => import("@/pages/BriefingBoyczuk"));
 const Login = lazy(() => import("@/pages/Login"));
 const ClientArea = lazy(() => import("@/pages/ClientArea"));
 const AdminArea = lazy(() => import("@/pages/AdminArea"));
+const Connect = lazy(() => import("@/pages/Connect"));
 
 // ORIGIN OS Module
 import OSLayout from "@/pages/os/components/OSLayout";
@@ -112,7 +113,8 @@ const App = () => (
             <Route path="/admin" element={<AdminArea />} />
             <Route path="/projetos" element={<Projetos />} />
             <Route path="/projetos/:id" element={<ProjectDetails />} />
-            
+            <Route path="/connect" element={<Connect />} />
+
             {/* ORIGIN OS Routes */}
             <Route path="/os" element={<OSLayout />}>
               <Route path="dashboard" element={<OSDashboard />} />
