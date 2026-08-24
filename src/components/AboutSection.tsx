@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { MapPin, Languages, Briefcase, Sparkles } from "lucide-react";
+import { MapPin, Languages, Briefcase, Sparkles, ArrowRight, UserCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 import sobreImg from "../assets/sobre.jpg";
 import sobreMascot from "../assets/sobre.webp";
 
@@ -102,7 +103,7 @@ const AboutSection = () => {
               </motion.div>
             </div>
 
-            <div className="space-y-4 leading-relaxed text-lg" style={{ color: "#a89f97" }}>
+            <div className="space-y-4 leading-relaxed text-lg mb-6" style={{ color: "#a89f97" }}>
               <p>
                 Sou desenvolvedor web apaixonado por criar soluções digitais que realmente
                 fazem diferença. Com experiência sólida em tecnologias modernas, combino
@@ -114,6 +115,21 @@ const AboutSection = () => {
                 acessível e bonito. Cada projeto é uma oportunidade de superar expectativas
                 e construir algo memorável.
               </p>
+            </div>
+
+            <div className="pt-2">
+              <Link
+                to="/sobre"
+                className="clay-btn inline-flex items-center gap-3 text-sm md:text-base font-bold py-3.5 px-7 shadow-lg group"
+                style={{
+                  background: "hsl(25, 95%, 53%)",
+                  color: "#ffffff"
+                }}
+              >
+                <UserCheck className="w-5 h-5" />
+                <span>Quer saber mais sobre meu perfil técnico?</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
           </motion.div>
 
