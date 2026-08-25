@@ -211,8 +211,8 @@ O servidor de desenvolvimento estará disponível em `http://localhost:8080` (ou
 
 | Variável | Descrição | Exemplo |
 | :--- | :--- | :--- |
-| `VITE_SUPABASE_URL` | URL base do seu projeto Supabase | `https://korfwyxfkmbwzwlukooz.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | Chave pública anônima da API Supabase (protegida por RLS) | `eyJhbGciOi...` |
+| `VITE_SUPABASE_URL` | URL base do seu projeto Supabase | `https://your-project-id.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | Chave pública anônima da API Supabase (protegida por RLS) | `your-anon-public-key` |
 
 ---
 
