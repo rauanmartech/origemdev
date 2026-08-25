@@ -31,7 +31,7 @@ import {
   CheckCircle
 } from "lucide-react";
 import { toast } from "sonner";
-import logoColorida from "@/assets/logo2_colorida.png";
+import logoColorida from "@/assets/logo.png";
 
 const AdminArea = () => {
   const [adminUser, setAdminUser] = useState<any>(null);

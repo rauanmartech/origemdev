@@ -21,7 +21,7 @@ import {
 import { toast } from "sonner";
 
 import { Camera } from "lucide-react";
-import logoColorida from "@/assets/logo2_colorida.png";
+import logoColorida from "@/assets/logo.png";
 
 // Vite dynamic import glob must be at top-level
 const BRIEFING_MODULES = import.meta.glob('../briefings/**/*.tsx');
