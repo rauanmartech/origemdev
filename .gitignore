@@ -57,3 +57,7 @@ pids
 *.pid
 *.seed
 *.pid.lock
+
+# Internal Instructions & Prompts
+Prompt*.md
+Prompt — Auditoria, Refatoração e Preparação de Projeto para GitHub.md
