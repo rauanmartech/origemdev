@@ -12,7 +12,9 @@ export function useAutoSaveDraft<T>(
       if (draft) {
         return JSON.parse(draft);
       }
-    } catch {}
+    } catch (err) {
+      // Fallback if JSON parse fails
+    }
     return initialValue;
   });
 
@@ -26,7 +28,9 @@ export function useAutoSaveDraft<T>(
           setData(JSON.parse(draft));
           return;
         }
-      } catch {}
+      } catch (err) {
+        // Fallback if JSON parse fails
+      }
       setData(initialValue);
     }
   }, [key, initialValue]);

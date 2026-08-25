@@ -24,7 +24,7 @@ const DecodingText = ({ words, interval = 3000, duration = 500 }: { words: strin
     for (let i = 0; i <= steps; i++) {
       await new Promise(resolve => setTimeout(resolve, stepDuration));
 
-      let progress = i / steps;
+      const progress = i / steps;
       let result = "";
 
       // Calculate current length based on progress

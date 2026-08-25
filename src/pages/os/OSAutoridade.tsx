@@ -122,7 +122,9 @@ const OSAutoridade: React.FC = () => {
       try {
         const draft = localStorage.getItem('os-draft-autoridade');
         if (draft) return JSON.parse(draft);
-      } catch {}
+      } catch (err) {
+        // Fallback if localStorage parse fails
+      }
       return { status: 'ideia' };
     })(),
   });

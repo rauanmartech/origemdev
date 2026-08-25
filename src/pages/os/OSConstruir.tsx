@@ -181,7 +181,9 @@ const OSConstruir: React.FC = () => {
       try {
         const draft = localStorage.getItem('os-draft-construir');
         if (draft) return JSON.parse(draft);
-      } catch {}
+      } catch (err) {
+        // Fallback if localStorage parse fails
+      }
       return { category: activeCategory };
     })(),
   });

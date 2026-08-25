@@ -397,7 +397,7 @@ export interface CreateNotePayload {
   is_favorite?: boolean;
 }
 
-export interface UpdateNotePayload extends Partial<CreateNotePayload> {}
+export type UpdateNotePayload = Partial<CreateNotePayload>;
 
 // =====================================================
 // Dashboard KPIs
