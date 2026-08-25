@@ -11,7 +11,7 @@
 
 ---
 
-## 📌 Sumário
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/list.svg" width="20" height="20" valign="middle" /> Sumário
 
 - [Sobre o Projeto](#-sobre-o-projeto)
 - [Módulos da Aplicação](#-módulos-da-aplicação)
@@ -26,7 +26,7 @@
 
 ---
 
-## 🚀 Sobre o Projeto
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/sparkles.svg" width="20" height="20" valign="middle" /> Sobre o Projeto
 
 O **OrigemDev** foi concebido para centralizar e profissionalizar todas as etapas do ciclo de vida de uma software house boutique:
 1. **Atração e Apresentação**: Portfólio de alta fidelidade com estética moderna (*Claymorphism* / Neumorphism suave), pré-visualização interativa de produtos web e mobile, e calculadora dinâmica de orçamentos.
@@ -35,7 +35,7 @@ O **OrigemDev** foi concebido para centralizar e profissionalizar todas as etapa
 
 ---
 
-## 🧩 Módulos da Aplicação
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/layers.svg" width="20" height="20" valign="middle" /> Módulos da Aplicação
 
 ### 1. Portal Institucional & Portfólio
 - **Hero & Decoding Animation**: Animação de texto decodificador personalizada com framer-motion.
@@ -62,7 +62,7 @@ O **OrigemDev** foi concebido para centralizar e profissionalizar todas as etapa
 
 ---
 
-## 🛠️ Stack Tecnológica
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/cpu.svg" width="20" height="20" valign="middle" /> Stack Tecnológica
 
 ### Frontend
 - **React 18.3** (Componentização funcional com Hooks e Context API)
@@ -92,7 +92,7 @@ O **OrigemDev** foi concebido para centralizar e profissionalizar todas as etapa
 
 ---
 
-## 🏗️ Arquitetura do Sistema
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/workflow.svg" width="20" height="20" valign="middle" /> Arquitetura do Sistema
 
 A arquitetura do OrigemDev é desacoplada e baseada em camadas bem definidas:
 
@@ -129,7 +129,7 @@ flowchart TD
 
 ---
 
-## 📁 Estrutura do Repositório
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/folder-tree.svg" width="20" height="20" valign="middle" /> Estrutura do Repositório
 
 ```text
 origemdev/
@@ -176,7 +176,7 @@ origemdev/
 
 ---
 
-## 💻 Instalação e Execução
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/terminal.svg" width="20" height="20" valign="middle" /> Instalação e Execução
 
 ### Pré-requisitos
 - **Node.js**: Versão 18.0.0 ou superior (recomendado 20 LTS)
@@ -207,7 +207,7 @@ O servidor de desenvolvimento estará disponível em `http://localhost:8080` (ou
 
 ---
 
-## 🔐 Variáveis de Ambiente
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/key-round.svg" width="20" height="20" valign="middle" /> Variáveis de Ambiente
 
 | Variável | Descrição | Exemplo |
 | :--- | :--- | :--- |
@@ -216,7 +216,7 @@ O servidor de desenvolvimento estará disponível em `http://localhost:8080` (ou
 
 ---
 
-## 📜 Scripts Disponíveis
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/scroll-text.svg" width="20" height="20" valign="middle" /> Scripts Disponíveis
 
 | Comando | Descrição |
 | :--- | :--- |
@@ -228,7 +228,7 @@ O servidor de desenvolvimento estará disponível em `http://localhost:8080` (ou
 
 ---
 
-## 💡 Decisões Técnicas de Engenharia
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/lightbulb.svg" width="20" height="20" valign="middle" /> Decisões Técnicas de Engenharia
 
 1. **Code Splitting & Lazy Loading**:
    - Todas as páginas principais são importadas sob demanda via `React.lazy()` e encapsuladas em `<Suspense>`, reduzindo drasticamente o payload do bundle inicial e melhorando as métricas de Core Web Vitals (FCP e LCP).
@@ -247,7 +247,7 @@ O servidor de desenvolvimento estará disponível em `http://localhost:8080` (ou
 
 ---
 
-## 👨‍💻 Autoria & Contato
+## <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/user-check.svg" width="20" height="20" valign="middle" /> Autoria & Contato
 
 Desenvolvido por **Rauan Rocha** — Fundador & Tech Lead na **OrigemDev**.
 
